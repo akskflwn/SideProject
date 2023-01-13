@@ -1,0 +1,16 @@
+OAuth2:
+  google:
+    url: https://accounts.google.com/o/oauth2/v2/auth
+    client-id: 178251444280-mj1d1i1r6mrktsbn67oq8fhm5i8t4d92.apps.googleusercontent.com
+    client-secret: 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
+    callback-url : http://localhost8080/app/accounts/auth/google/callback
+    scope: https://www.googleapis.com/auth/user.info.email https://www.googleapis.com/auth/userinfo_profile
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/didabara?serverTimezone=Asia/Seoul
+    username: sky
+    password: 1234
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
