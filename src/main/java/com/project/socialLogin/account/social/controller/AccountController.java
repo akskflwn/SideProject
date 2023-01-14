@@ -1,7 +1,7 @@
-package project.demo.socialLogin.account.social.controller;
+package com.project.socialLogin.account.social.controller;
 
-import project.demo.socialLogin.account.social.config.Constant.SocialLoginType;
-import project.demo.socialLogin.account.social.service.OAuthService;
+import com.project.socialLogin.account.social.config.Constant.SocialLoginType;
+import com.project.socialLogin.account.social.service.OAuthService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

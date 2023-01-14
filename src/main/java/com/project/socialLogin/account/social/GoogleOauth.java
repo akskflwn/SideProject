@@ -1,4 +1,4 @@
-package project.demo.socialLogin.account.social;
+package com.project.socialLogin.account.social;
 
 import java.util.HashMap;
 import java.util.Map;

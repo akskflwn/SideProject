@@ -1,7 +1,7 @@
-package project.demo.socialLogin.account.social;
+package com.project.socialLogin.account.social;
 
-import project.demo.socialLogin.account.social.config.Constant.SocialLoginType;
-import project.demo.socialLogin.account.social.service.social.FacebookOauth;
+import com.project.socialLogin.account.social.config.Constant.SocialLoginType;
+import com.project.socialLogin.account.social.service.social.FacebookOauth;
 
 public interface SocialOauth {
     /**

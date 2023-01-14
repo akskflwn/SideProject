@@ -1,6 +1,6 @@
-package project.demo.socialLogin.account.social.service.social;
+package com.project.socialLogin.account.social.service.social;
 
-import project.demo.socialLogin.account.social.SocialOauth;
+import com.project.socialLogin.account.social.SocialOauth;
 import org.springframework.stereotype.Component;
 
 @Component

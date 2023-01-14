@@ -1,4 +1,4 @@
-package project.demo.socialLogin.account.social.config;
+package com.project.socialLogin.account.social.config;
 
 public class Constant {
     public enum SocialLoginType {

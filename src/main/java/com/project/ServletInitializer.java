@@ -1,4 +1,4 @@
-package project.demo;
+package com.project;
 
 
 import org.springframework.boot.builder.SpringApplicationBuilder;

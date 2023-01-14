@@ -1,4 +1,4 @@
-package project.demo.socialLogin.account.social.config;
+package com.project.socialLogin.account.social.config;
 
 import java.nio.charset.Charset;
 import org.springframework.boot.web.client.RestTemplateBuilder;
