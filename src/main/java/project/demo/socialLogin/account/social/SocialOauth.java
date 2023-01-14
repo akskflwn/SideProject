@@ -1,7 +1,7 @@
-package google.demo.src.account.social;
+package project.demo.socialLogin.account.social;
 
-import google.demo.config.Constant.SocialLoginType;
-import google.demo.src.account.social.service.social.FacebookOauth;
+import project.demo.socialLogin.account.social.config.Constant.SocialLoginType;
+import project.demo.socialLogin.account.social.service.social.FacebookOauth;
 
 public interface SocialOauth {
     /**

@@ -1,4 +1,4 @@
-package google.demo.src.account.social.domain;
+package project.demo.socialLogin.account.social.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

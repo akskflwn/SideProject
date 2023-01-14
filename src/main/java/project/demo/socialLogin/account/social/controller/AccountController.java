@@ -1,14 +1,13 @@
-package google.demo.src.account.social.controller;
+package project.demo.socialLogin.account.social.controller;
 
-import google.demo.config.Constant.SocialLoginType;
-import google.demo.src.account.social.service.OAuthService;
+import project.demo.socialLogin.account.social.config.Constant.SocialLoginType;
+import project.demo.socialLogin.account.social.service.OAuthService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping(value = "/auth")
 @Slf4j

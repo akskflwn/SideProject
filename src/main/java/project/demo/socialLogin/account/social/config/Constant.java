@@ -1,4 +1,4 @@
-package google.demo.config;
+package project.demo.socialLogin.account.social.config;
 
 public class Constant {
     public enum SocialLoginType {

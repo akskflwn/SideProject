@@ -1,6 +1,6 @@
-package google.demo.config;
+package project.demo.socialLogin.account.social.config;
 
-import google.demo.config.Constant.SocialLoginType;
+import project.demo.socialLogin.account.social.config.Constant.SocialLoginType;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 

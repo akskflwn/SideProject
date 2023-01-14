@@ -1,4 +1,4 @@
-package google.demo.config;
+package project.demo.socialLogin.account.social.config;
 
 import java.nio.charset.Charset;
 import org.springframework.boot.web.client.RestTemplateBuilder;

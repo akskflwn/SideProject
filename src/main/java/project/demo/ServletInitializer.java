@@ -1,4 +1,4 @@
-package google.demo;
+package project.demo;
 
 
 import org.springframework.boot.builder.SpringApplicationBuilder;

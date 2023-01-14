@@ -1,7 +1,7 @@
-package google.demo.src.account.social.service;
+package project.demo.socialLogin.account.social.service;
 
-import google.demo.config.Constant.SocialLoginType;
-import google.demo.src.account.social.SocialOauth;
+import project.demo.socialLogin.account.social.config.Constant.SocialLoginType;
+import project.demo.socialLogin.account.social.SocialOauth;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
