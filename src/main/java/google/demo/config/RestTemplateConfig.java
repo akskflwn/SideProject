@@ -19,4 +19,6 @@ public class RestTemplateConfig {
             .additionalMessageConverters(new StringHttpMessageConverter(Charset.forName("UTF-8")))
             .build();
     }
+
+
 }

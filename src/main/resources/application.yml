@@ -3,8 +3,9 @@ OAuth2:
     url: https://accounts.google.com/o/oauth2/v2/auth
     client-id: 178251444280-mj1d1i1r6mrktsbn67oq8fhm5i8t4d92.apps.googleusercontent.com
     client-secret: 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
-    callback-url : http://localhost8080/app/accounts/auth/google/callback
+    callback-url : http://localhost:8080/auth/google/callback
     scope: https://www.googleapis.com/auth/user.info.email https://www.googleapis.com/auth/userinfo_profile
+    token-url : https://oauth2.googleapis.com/token
 
 spring:
   datasource:
