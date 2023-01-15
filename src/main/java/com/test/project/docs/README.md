@@ -11,8 +11,8 @@
 
 
 __유저 폼 구현 상태__
-- [ ] 회원가입 기능 만들기
-- [ ] 로그인 기능 만들기
+- [x] 회원가입 기능 만들기
+- [x] 로그인 기능 만들기
 
 
 __게시판 구현 상태__
@@ -28,10 +28,10 @@ __소셜 로그인 구현 상태__
 - [ ] NAVER access token , id token 가져오기
 - [ ] KAKAO access token , id token 가져오기
 - 
-- [ ] TODO : @CrossOrigin 대신 Spring Security로 설정 변경하기
-- [ ] UserDomain 만들기
+- [x] TODO : @CrossOrigin 대신 Spring Security로 설정 변경하기
+- [x] UserDomain 만들기
 - [x] MySql 연결하기 
-- [ ] JWT Token 생성하기
+- [x] JWT Token 생성하기
 
 
 __VIEW__
