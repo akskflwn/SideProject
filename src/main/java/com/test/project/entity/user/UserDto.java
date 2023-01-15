@@ -52,6 +52,22 @@ public class UserDto {
 
         @NotBlank(message = "비밀번호를 입력해주세요")
         private String password;
+
+        public boolean checkPassword(String userPassword) {
+            return this.password.equals(userPassword);
+        }
+    }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    public static class LoginResponse{
+        private String token;
+
+        public void createToken(String token){
+            this.token = token;
+        }
     }
 
 }
