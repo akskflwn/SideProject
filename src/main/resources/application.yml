@@ -3,15 +3,29 @@ OAuth2:
     url: https://accounts.google.com/o/oauth2/v2/auth
     client-id: 178251444280-mj1d1i1r6mrktsbn67oq8fhm5i8t4d92.apps.googleusercontent.com
     client-secret: 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
-    callback-url : http://localhost:8080/auth/google/callback
+    callback-url: http://localhost:8080/auth/google/callback
     scope: https://www.googleapis.com/auth/user.info.email https://www.googleapis.com/auth/userinfo_profile
-    token-url : https://oauth2.googleapis.com/token
+    token-url: https://oauth2.googleapis.com/token
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/didabara?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/board?serverTimezone=Asia/Seoul
     username: sky
     password: 1234
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
+    mvc:
+      pathmatch:
+        matching-strategy: ant_path_matcher
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
