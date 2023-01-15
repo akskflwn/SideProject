@@ -2,6 +2,7 @@ package com.test.project.entity.user;
 
 import com.test.project.entity.user.UserDto.CreateRequest;
 import com.test.project.entity.user.UserDto.LoginRequest;
+import com.test.project.entity.user.UserDto.MyInfoResponse;
 import com.test.project.exception.user.DuplicatedEmailException;
 import com.test.project.exception.user.DuplicatedNicknameException;
 import com.test.project.exception.user.UserNotFoundException;
@@ -46,5 +47,12 @@ public class UserService {
         }
         String token = tokenProvider.create(user);
         return token;
+    }
+    @Transactional(readOnly = true)
+    public MyInfoResponse getMyPageInfo(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(()-> new UserNotFoundException("존재하지 앟는 사용자입니다."));
+        MyInfoResponse myInfoResponse = user.toUserInfoResponse();
+        return myInfoResponse;
     }
 }

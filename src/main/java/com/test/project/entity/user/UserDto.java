@@ -70,4 +70,12 @@ public class UserDto {
         }
     }
 
+    @Getter
+    @Builder
+    public static class MyInfoResponse {
+        private String nickname;
+        private String email;
+        private String name;
+    }
+
 }

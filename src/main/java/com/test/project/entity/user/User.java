@@ -1,6 +1,7 @@
 package com.test.project.entity.user;
 
 import com.test.project.entity.BaseTimeEntity;
+import com.test.project.entity.user.UserDto.MyInfoResponse;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,4 +34,11 @@ public class User extends BaseTimeEntity {
     private String password;
 
 
+    public MyInfoResponse toUserInfoResponse() {
+        return MyInfoResponse.builder()
+            .email(this.email)
+            .name(this.name)
+            .nickname(this.nickname)
+            .build();
+    }
 }
