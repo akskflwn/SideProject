@@ -3,7 +3,9 @@ package com.test.project.entity.user;
 import static com.test.project.constants.ResponseConstants.CREATED;
 import static com.test.project.constants.ResponseConstants.OK;
 
+import com.mysql.cj.x.protobuf.Mysqlx.Ok;
 import com.test.project.entity.user.UserDto.CreateRequest;
+import com.test.project.entity.user.UserDto.DeleteRequest;
 import com.test.project.entity.user.UserDto.LoginRequest;
 import com.test.project.entity.user.UserDto.MyInfoResponse;
 import com.test.project.entity.user.UserDto.UpdateRequest;
@@ -69,6 +71,14 @@ public class UserController {
     public ResponseEntity<Void> update(@Valid @RequestBody UpdateRequest updateRequestDto,
         @AuthenticationPrincipal Long userId){
         userService.update(updateRequestDto,userId);
+
+        return OK;
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<Void> delete(@Valid @RequestBody DeleteRequest requestDto,
+        @AuthenticationPrincipal Long userId){
+        userService.delete(requestDto,userId);
 
         return OK;
     }

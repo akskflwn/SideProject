@@ -1,12 +1,14 @@
 package com.test.project.entity.user;
 
 import com.test.project.entity.user.UserDto.CreateRequest;
+import com.test.project.entity.user.UserDto.DeleteRequest;
 import com.test.project.entity.user.UserDto.LoginRequest;
 import com.test.project.entity.user.UserDto.MyInfoResponse;
 import com.test.project.entity.user.UserDto.UpdateRequest;
 import com.test.project.exception.user.DuplicatedEmailException;
 import com.test.project.exception.user.DuplicatedNicknameException;
 import com.test.project.exception.user.UserNotFoundException;
+import com.test.project.exception.user.WrongPasswordException;
 import com.test.project.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -75,5 +77,16 @@ public class UserService {
             throw new DuplicatedNicknameException();
         }
 
+    }
+    @Transactional
+    public void delete(DeleteRequest requestDto, Long userId) {
+        User user = userRepository.findById(userId)
+        .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
+
+        if (!requestDto.checkPassword(user.getPassword())) {
+            throw new WrongPasswordException();
+        }
+
+        userRepository.delete(user);
     }
 }

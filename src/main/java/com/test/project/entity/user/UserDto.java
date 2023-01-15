@@ -79,7 +79,7 @@ public class UserDto {
     }
 
     @Getter
-    @NoArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class UpdateRequest{
 
         @NotBlank(message = "닉네임을 입력해주세요")
@@ -90,5 +90,18 @@ public class UserDto {
         @Size(min = 3, max = 12, message = "숫자, 문자, 특수문자 중 2가지를 조합해주세요")
         private String password;
         
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DeleteRequest {
+        @NotBlank(message = "비밀번호를 입력해주세요")
+        private String password;
+
+        public boolean checkPassword(String userPassword) {
+            return this.password.equals(userPassword);
+        }
     }
 }
