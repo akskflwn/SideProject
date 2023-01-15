@@ -1,10 +1,12 @@
 package com.test.project.entity.user;
 
 import static com.test.project.constants.ResponseConstants.CREATED;
+import static com.test.project.constants.ResponseConstants.OK;
 
 import com.test.project.entity.user.UserDto.CreateRequest;
 import com.test.project.entity.user.UserDto.LoginRequest;
 import com.test.project.entity.user.UserDto.MyInfoResponse;
+import com.test.project.entity.user.UserDto.UpdateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,5 +63,13 @@ public class UserController {
     @GetMapping("/mypage")
     public ResponseEntity<MyInfoResponse> getLoginInformation(@AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(userService.getMyPageInfo(userId));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Void> update(@Valid @RequestBody UpdateRequest updateRequestDto,
+        @AuthenticationPrincipal Long userId){
+        userService.update(updateRequestDto,userId);
+
+        return OK;
     }
 }

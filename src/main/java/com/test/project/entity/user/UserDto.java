@@ -78,4 +78,17 @@ public class UserDto {
         private String name;
     }
 
+    @Getter
+    @NoArgsConstructor
+    public static class UpdateRequest{
+
+        @NotBlank(message = "닉네임을 입력해주세요")
+        @Size(min=2, max = 12 , message = "닉네임은 3자 이상 12자 이하를 입력해주세요")
+        private String nickname;
+    
+        @NotBlank(message = "비밀번호를 입력해주세요")
+        @Size(min = 3, max = 12, message = "숫자, 문자, 특수문자 중 2가지를 조합해주세요")
+        private String password;
+        
+    }
 }

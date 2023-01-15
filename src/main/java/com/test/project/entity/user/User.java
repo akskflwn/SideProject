@@ -2,6 +2,7 @@ package com.test.project.entity.user;
 
 import com.test.project.entity.BaseTimeEntity;
 import com.test.project.entity.user.UserDto.MyInfoResponse;
+import com.test.project.entity.user.UserDto.UpdateRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,5 +41,10 @@ public class User extends BaseTimeEntity {
             .name(this.name)
             .nickname(this.nickname)
             .build();
+    }
+
+    public void updateUser(UpdateRequest updateRequestDto) {
+        this.nickname = updateRequestDto.getNickname();
+        this.password = updateRequestDto.getPassword();
     }
 }
