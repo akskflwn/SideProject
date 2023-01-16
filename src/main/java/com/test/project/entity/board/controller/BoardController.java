@@ -32,6 +32,13 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    /**
+     * 게시물 생성 메서드
+     *
+     * @param savedRequestDto
+     * @param userId
+     * @return
+     */
     @PostMapping("/create")
     public ResponseEntity<Long> saveBoard(@Valid @RequestBody SaveRequest savedRequestDto,
         @AuthenticationPrincipal Long userId) {
@@ -41,13 +48,27 @@ public class BoardController {
         return ResponseEntity.ok(boardService.saveBoard(savedRequestDto, userId));
     }
 
+    /**
+     * 특정 게시물 수정
+     *
+     * @param boardId
+     * @param updateRequestDto
+     * @param userId
+     * @return
+     */
     @PostMapping("/update/{boardId}")
     public ResponseEntity<Long> updateBoard(@PathVariable Long boardId, @Valid @RequestBody
     UpdateRequest updateRequestDto, @AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(boardService.updateBoard(boardId, updateRequestDto, userId));
     }
 
-    //특정 게시글 조회
+    /**
+     * 특정 게시글 조회 메서드
+     *
+     * @param boardId
+     * @param userId
+     * @return
+     */
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardDto.Response> getBoard(@PathVariable Long boardId,
         @AuthenticationPrincipal Long userId) {
@@ -55,22 +76,35 @@ public class BoardController {
     }
 
     /**
-     *
      * @param userId
      * @param pageable
      * @return 게시글 전체 조회 (id 기준 내림차순으로 출력한다.)
      */
     @GetMapping("/list")
-    public ResponseEntity<Page<BoardDto.Response>> getBoardList(@AuthenticationPrincipal Long userId, @PageableDefault
-        Pageable pageable){
+    public ResponseEntity<Page<BoardDto.Response>> getBoardList(
+        @AuthenticationPrincipal Long userId, @PageableDefault
+    Pageable pageable) {
         return ResponseEntity.ok(boardService.getBoardList(userId, pageable, DEFAULT));
     }
 
+    /**
+     * @param userId
+     * @param pageable
+     * @return 게시글 전체 조회 (좋아요 순, id 내림차순으로 출력한다.)
+     */
     @GetMapping("/list/likes")
-    public ResponseEntity<Page<BoardDto.Response>> getBoardListByLikes(@AuthenticationPrincipal Long userId,@PageableDefault Pageable pageable){
-        return ResponseEntity.ok(boardService.getBoardList(userId,pageable,LIKES));
+    public ResponseEntity<Page<BoardDto.Response>> getBoardListByLikes(
+        @AuthenticationPrincipal Long userId, @PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(boardService.getBoardList(userId, pageable, LIKES));
     }
 
+    /**
+     * 게시물 삭제
+     *
+     * @param boardId
+     * @param userId
+     * @return
+     */
     @PostMapping("/delete/{boardId}")
     public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId,
         @AuthenticationPrincipal Long userId) {

@@ -31,12 +31,24 @@ public class UserController {
 
     private final UserService userService;
 
+    /**
+     * 회웝가입 메서드
+     *
+     * @param requestDto
+     * @return
+     */
     @PostMapping("/create")
     public ResponseEntity<Void> createUser(@Valid @RequestBody CreateRequest requestDto) {
         userService.create(requestDto);
         return CREATED;
     }
 
+    /**
+     * 로그인 메서드
+     *
+     * @param loginRequestDto
+     * @return
+     */
     @PostMapping("/login")
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequestDto) {
         String token = userService.login(loginRequestDto);
@@ -50,6 +62,11 @@ public class UserController {
             .build();
     }
 
+    /**
+     * 로그아웃 메서드
+     *
+     * @return 쿠기 생명주기 0으로 변경
+     */
     @GetMapping("/logout")
     public ResponseEntity<Void> logout() {
         ResponseCookie cookie = ResponseCookie.from("access-token", null)
@@ -61,12 +78,25 @@ public class UserController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
     }
 
+    /**
+     * 내정보 페이지
+     *
+     * @param userId
+     * @return userDto(MyInfoResponse)
+     */
     @GetMapping("/mypage")
     public ResponseEntity<MyInfoResponse> getLoginInformation(
         @AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(userService.getMyPageInfo(userId));
     }
 
+    /**
+     * 회원 정보 수정 메서드
+     *
+     * @param updateRequestDto
+     * @param userId
+     * @return ResponseEntity.ok().build();
+     */
     @PutMapping("/update")
     public ResponseEntity<Void> update(@Valid @RequestBody UpdateRequest updateRequestDto,
         @AuthenticationPrincipal Long userId) {
@@ -75,6 +105,13 @@ public class UserController {
         return OK;
     }
 
+    /**
+     * 회원 탈퇴 메서드
+     *
+     * @param requestDto
+     * @param userId
+     * @return ResponseEntity.ok().build();
+     */
     @PostMapping("/delete")
     public ResponseEntity<Void> delete(@Valid @RequestBody DeleteRequest requestDto,
         @AuthenticationPrincipal Long userId) {
