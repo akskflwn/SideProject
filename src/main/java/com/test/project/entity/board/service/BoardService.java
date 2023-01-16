@@ -1,5 +1,9 @@
 package com.test.project.entity.board.service;
 
+import static com.test.project.constants.SortStatus.DEFAULT;
+import static com.test.project.constants.SortStatus.LIKES;
+
+import com.test.project.constants.SortStatus;
 import com.test.project.entity.board.entity.Board;
 import com.test.project.entity.board.entity.Reply;
 import com.test.project.entity.board.dto.BoardDto;
@@ -14,10 +18,14 @@ import com.test.project.exception.board.BoardNotFoundException;
 import com.test.project.exception.user.UserNotFoundException;
 import com.test.project.exception.user.UserNotMatchException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -129,5 +137,26 @@ public class BoardService {
         board.changeStatus();
 
         boardRepository.save(board);
+    }
+
+    public Page<BoardDto.Response> getBoardList(Long userId, Pageable pageable, SortStatus status) {
+
+        Page<Board> boards = new PageImpl<>(Collections.emptyList());
+
+        if (status.equals(DEFAULT)) {
+            boards = boardRepository.findAllByDesc(pageable);
+        } else if (status.equals(LIKES)) {
+            boards = boardRepository.findAllLikesDesc(pageable);
+        }
+
+        return new PageImpl<>(entityToListDto(boards, userId), pageable, boards.getTotalElements());
+    }
+
+    private List<BoardDto.Response> entityToListDto(Page<Board> boards, Long userId) {
+        return boards.stream()
+            .map(board -> BoardDto.Response.builder()
+                .board(board)
+                .isLiked(isLikedByCurrentUser(userId, board)).build())
+            .collect(Collectors.toList());
     }
 }
