@@ -71,5 +71,5 @@ public class MyExceptionHandler {
         return NOT_LOGINED_USER;
     }
 
-    }
+}
 

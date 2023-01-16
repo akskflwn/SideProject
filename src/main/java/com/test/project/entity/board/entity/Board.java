@@ -1,7 +1,7 @@
-package com.test.project.entity.board;
+package com.test.project.entity.board.entity;
 
 import com.test.project.entity.BaseTimeEntity;
-import com.test.project.entity.board.dto.BoardDto.MyBoardResponse;
+import com.test.project.entity.board.dto.BoardDto.Response.MyBoardResponse;
 import com.test.project.entity.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -39,10 +39,10 @@ public class Board extends BaseTimeEntity {
     @Valid
     @JsonIgnore //@JsonIgnore 데이터를 주고 받을때 해당 데이터는 'ignore' 되어 응답값에 보이지 않게됨
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Size(max=50)
+    @Size(max = 50)
     private String title;
 
     private String content;
@@ -51,23 +51,27 @@ public class Board extends BaseTimeEntity {
 
     private boolean isDeleted;
 
-    @BatchSize(size=100) //조회할 컬럼 최대 수
+    @BatchSize(size = 100) //조회할 컬럼 최대 수
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Like> likes;
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Reply> replies;
 
-    public void updateBoard(String title, String content){
+    public void updateBoard(String title, String content) {
         this.title = title;
         this.content = content;
     }
 
-    public void addViewCount(int view){
+    public void addViewCount(int view) {
         this.view = view + 1;
     }
 
-    public MyBoardResponse toMyBoardResponse(User user){
+    public void changeStatus() {
+        this.isDeleted = true;
+    }
+
+    public MyBoardResponse toMyBoardResponse(User user) {
         return MyBoardResponse.builder()
             .id(this.id)
             .title(this.title)

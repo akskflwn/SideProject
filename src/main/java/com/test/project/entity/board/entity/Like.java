@@ -1,4 +1,4 @@
-package com.test.project.entity.board;
+package com.test.project.entity.board.entity;
 
 import com.test.project.entity.user.User;
 import jakarta.persistence.Entity;

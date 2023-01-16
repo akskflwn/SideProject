@@ -1,4 +1,4 @@
-package com.test.project.entity.board;
+package com.test.project.entity.board.entity;
 
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -6,7 +6,6 @@ import static jakarta.persistence.FetchType.LAZY;
 import com.test.project.entity.BaseTimeEntity;
 import com.test.project.entity.user.User;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -43,7 +42,6 @@ public class Reply extends BaseTimeEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)
