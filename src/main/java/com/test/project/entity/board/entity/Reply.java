@@ -45,12 +45,12 @@ public class Reply extends BaseTimeEntity {
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name="parent_reply_id")
+    @JoinColumn(name = "parent_reply_id")
     private Reply parentReply;
 
     @JsonIgnore
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name="to_user_id")
+    @JoinColumn(name = "to_user_id")
     private User parentUser;
 
     @OneToMany(mappedBy = "parentReply")
@@ -65,21 +65,24 @@ public class Reply extends BaseTimeEntity {
         this.parentUser = parentUser;
     }
 
-    public static Reply createReply(Board board, User user, String content){
+    public void setParentReply(Reply parentReply) {
+        this.parentReply = parentReply;
+    }
+
+    public static Reply createReply(Board board, User user, String content) {
         return Reply.builder()
             .board(board)
             .user(user)
             .content(content).build();
     }
 
-    public void updateReply(String content){
+    public void updateReply(String content) {
         this.content = content;
     }
 
-    public void changeDeleteStatus(){
+    public void changeDeleteStatus() {
         this.isDeleted = true;
     }
-
 
 
 }

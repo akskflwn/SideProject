@@ -16,8 +16,12 @@ import com.test.project.exception.user.UserNotFoundException;
 import com.test.project.exception.user.UserNotLoginedException;
 import com.test.project.exception.user.WrongEmailOrNameException;
 import com.test.project.exception.user.WrongPasswordException;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -71,5 +75,13 @@ public class MyExceptionHandler {
         return NOT_LOGINED_USER;
     }
 
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<Map<String, String>> handleBindException(BindException exception) {
+        Map<String, String> errors = new HashMap<>();
+        exception.getBindingResult().getAllErrors()
+            .forEach(e -> errors.put(((FieldError) e).getField(), e.getDefaultMessage()));
+        log.debug("erros = {}", errors);
+        return ResponseEntity.badRequest().body(errors);
+    }
 }
 

@@ -4,14 +4,13 @@ import static com.test.project.constants.SortStatus.DEFAULT;
 import static com.test.project.constants.SortStatus.LIKES;
 
 import com.test.project.entity.board.dto.BoardDto;
-import com.test.project.entity.board.dto.BoardDto.Response;
 import com.test.project.entity.board.dto.BoardDto.UpdateRequest;
+import com.test.project.entity.board.dto.ReplyDto.Request;
+import com.test.project.entity.board.dto.ReplyDto.SuperRequest;
 import com.test.project.entity.board.service.BoardService;
-import com.test.project.exception.user.UserNotFoundException;
 import com.test.project.exception.user.UserNotLoginedException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.Update;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -111,4 +110,48 @@ public class BoardController {
         boardService.deleteBoard(boardId, userId);
         return ResponseEntity.ok().build();
     }
+
+    /**
+     * 부모 댓글 작성
+     *
+     * @param superRequestDto
+     * @param userId
+     * @return replyId
+     */
+    @PostMapping("/reply/create/super")
+    public ResponseEntity<Long> saveSuperReply(@Valid @RequestBody SuperRequest superRequestDto,
+        @AuthenticationPrincipal Long userId) {
+        if (userId == null) {
+            throw new UserNotLoginedException();
+        }
+        return ResponseEntity.ok(boardService.saveSuperReply(userId, superRequestDto));
+    }
+
+    /**
+     * 자식 댓글 작성
+     *
+     * @param subRequestDto
+     * @param userId
+     * @return replyId
+     */
+    @PostMapping("/reply/create/sub")
+    public ResponseEntity<Long> saveSubReply(@Valid @RequestBody Request subRequestDto,
+        @AuthenticationPrincipal Long userId) {
+        if (userId == null) {
+            throw new UserNotLoginedException();
+        }
+        return ResponseEntity.ok(boardService.saveSubReply(userId, subRequestDto));
+    }
+
+    @PostMapping("/reply/update")
+    public ResponseEntity<Long> updateReply(@Valid @RequestBody Request dto, @AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(boardService.updateReply(dto, userId));
+    }
+
+    @PostMapping("/reply/delete/{replyId}")
+    public ResponseEntity<Void> deleteReply(@PathVariable Long replyId, @AuthenticationPrincipal Long userId) {
+        boardService.deleteReply(replyId, userId);
+        return ResponseEntity.ok().build();
+    }
+
 }

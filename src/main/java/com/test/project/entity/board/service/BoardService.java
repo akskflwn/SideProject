@@ -4,6 +4,8 @@ import static com.test.project.constants.SortStatus.DEFAULT;
 import static com.test.project.constants.SortStatus.LIKES;
 
 import com.test.project.constants.SortStatus;
+import com.test.project.entity.board.dto.ReplyDto.Request;
+import com.test.project.entity.board.dto.ReplyDto.SuperRequest;
 import com.test.project.entity.board.entity.Board;
 import com.test.project.entity.board.entity.Reply;
 import com.test.project.entity.board.dto.BoardDto;
@@ -12,9 +14,11 @@ import com.test.project.entity.board.dto.BoardDto.UpdateRequest;
 import com.test.project.entity.board.dto.ReplyDto.Response;
 import com.test.project.entity.board.repository.BoardRepository;
 import com.test.project.entity.board.repository.LikeRepository;
+import com.test.project.entity.board.repository.ReplyRepository;
 import com.test.project.entity.user.User;
 import com.test.project.entity.user.UserRepository;
 import com.test.project.exception.board.BoardNotFoundException;
+import com.test.project.exception.board.ReplyNotFoundException;
 import com.test.project.exception.user.UserNotFoundException;
 import com.test.project.exception.user.UserNotMatchException;
 import java.util.ArrayList;
@@ -37,6 +41,7 @@ public class BoardService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
+    private final ReplyRepository replyRepository;
 
 
     public BoardDto.Response getBoardDetail(Long boardId, Long userId) {
@@ -158,5 +163,61 @@ public class BoardService {
                 .board(board)
                 .isLiked(isLikedByCurrentUser(userId, board)).build())
             .collect(Collectors.toList());
+    }
+
+    public Long saveSuperReply(Long userId, SuperRequest superRequestDto) {
+        Reply reply = Reply.createReply(getBoard(superRequestDto.getBoardId()), getUser(userId),
+            superRequestDto.getContent());
+
+        replyRepository.save(reply);
+        return reply.getId();
+    }
+
+    public Long saveSubReply(Long userId, Request subRequestDto) {
+        Reply parentReply = replyRepository.findById(subRequestDto.getReplyId())
+            .orElseThrow(() -> new IllegalStateException("댓글이 존재하지 않습니다"));
+        Reply reply = Reply.createReply(parentReply.getBoard(), getUser(userId),
+            subRequestDto.getContent());
+        reply.setParentUser(parentReply.getUser());
+
+        if (parentReply.getParentReply() == null) {
+            reply.setParentReply(parentReply);
+        } else {
+            reply.setParentReply(parentReply.getParentReply());
+        }
+
+        replyRepository.save(reply);
+        return reply.getId();
+    }
+
+    public Long updateReply(Request dto, Long userId) {
+        Reply reply = getReply(dto.getReplyId());
+
+        User user = getUser(userId);
+        if (user != reply.getUser()) {
+            throw new UserNotMatchException("본인이 작성한 댓글만 수정할 수 있습니다.");
+        }
+
+        reply.updateReply(dto.getContent());
+        replyRepository.save(reply);
+        return reply.getId();
+    }
+
+
+    public void deleteReply(Long replyId, Long userId) {
+        Reply reply = getReply(replyId);
+
+        User user = getUser(userId);
+        if (user != reply.getUser()) {
+            throw new UserNotMatchException("본인이 작성한 댓글만 삭제할 수 있습니다");
+        }
+
+        reply.changeDeleteStatus();
+        replyRepository.save(reply);
+    }
+
+    private Reply getReply(Long replyId) {
+        return replyRepository.findById(replyId)
+            .orElseThrow(() -> new ReplyNotFoundException("댓글이 존재하지 않습니다."));
     }
 }
