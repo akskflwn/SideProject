@@ -3,7 +3,6 @@ package com.test.project.entity.user;
 import static com.test.project.constants.ResponseConstants.CREATED;
 import static com.test.project.constants.ResponseConstants.OK;
 
-import com.mysql.cj.x.protobuf.Mysqlx.Ok;
 import com.test.project.entity.user.UserDto.CreateRequest;
 import com.test.project.entity.user.UserDto.DeleteRequest;
 import com.test.project.entity.user.UserDto.LoginRequest;
@@ -13,7 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,15 +38,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequestDto){
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequestDto) {
         String token = userService.login(loginRequestDto);
-        ResponseCookie responseCookie = ResponseCookie.from("access-token",token)
+        ResponseCookie responseCookie = ResponseCookie.from("access-token", token)
             .httpOnly(true)
             .path("/")
-            .maxAge(12*(60*60) + 9 * (60 * 60))
+            .maxAge(12 * (60 * 60) + 9 * (60 * 60))
             .build();
-        log.info("발급 토큰 = {}",token);
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).build();
+        log.info("발급 토큰 = {}", token);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+            .build();
     }
 
     @GetMapping("/logout")
@@ -63,22 +62,23 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public ResponseEntity<MyInfoResponse> getLoginInformation(@AuthenticationPrincipal Long userId) {
+    public ResponseEntity<MyInfoResponse> getLoginInformation(
+        @AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(userService.getMyPageInfo(userId));
     }
 
     @PutMapping("/update")
     public ResponseEntity<Void> update(@Valid @RequestBody UpdateRequest updateRequestDto,
-        @AuthenticationPrincipal Long userId){
-        userService.update(updateRequestDto,userId);
+        @AuthenticationPrincipal Long userId) {
+        userService.update(updateRequestDto, userId);
 
         return OK;
     }
 
     @PostMapping("/delete")
     public ResponseEntity<Void> delete(@Valid @RequestBody DeleteRequest requestDto,
-        @AuthenticationPrincipal Long userId){
-        userService.delete(requestDto,userId);
+        @AuthenticationPrincipal Long userId) {
+        userService.delete(requestDto, userId);
 
         return OK;
     }

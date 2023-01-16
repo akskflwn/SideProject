@@ -50,6 +50,7 @@ public class WebSecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/", "/**");
+
     }
 
     public CorsConfigurationSource corsConfigurationSource() {
