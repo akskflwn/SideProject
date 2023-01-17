@@ -3,6 +3,7 @@ package com.test.project.entity.user;
 import static com.test.project.constants.ResponseConstants.CREATED;
 import static com.test.project.constants.ResponseConstants.OK;
 
+import com.test.project.entity.board.dto.BoardDto.MyBoardResponse;
 import com.test.project.entity.user.UserDto.CreateRequest;
 import com.test.project.entity.user.UserDto.DeleteRequest;
 import com.test.project.entity.user.UserDto.LoginRequest;
@@ -11,10 +12,14 @@ import com.test.project.entity.user.UserDto.UpdateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -119,4 +124,17 @@ public class UserController {
 
         return OK;
     }
+
+    /**
+     * 내가 좋아요 누른 게시물 리스트
+     * @param pageable
+     * @param userId
+     * @return Page
+     */
+    @GetMapping("/mypage/board/liked")
+    public ResponseEntity<Page<MyBoardResponse  >> getBoardILiked(@PageableDefault Pageable pageable,
+        @AuthenticationPrincipal Long userId){
+        return ResponseEntity.ok(userService.getBoardsILiked(userId,pageable));
+    }
+
 }

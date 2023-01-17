@@ -1,5 +1,9 @@
 package com.test.project.entity.user;
 
+import com.test.project.entity.board.dto.BoardDto;
+import com.test.project.entity.board.dto.BoardDto.MyBoardResponse;
+import com.test.project.entity.board.entity.Board;
+import com.test.project.entity.board.repository.BoardRepository;
 import com.test.project.entity.user.UserDto.CreateRequest;
 import com.test.project.entity.user.UserDto.DeleteRequest;
 import com.test.project.entity.user.UserDto.LoginRequest;
@@ -10,8 +14,13 @@ import com.test.project.exception.user.DuplicatedNicknameException;
 import com.test.project.exception.user.UserNotFoundException;
 import com.test.project.exception.user.WrongPasswordException;
 import com.test.project.security.TokenProvider;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +31,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
+    private final BoardRepository boardRepository;
 
     public void create(CreateRequest requestDto) {
         checkDuplicatedForCreate(requestDto);
@@ -88,5 +98,18 @@ public class UserService {
         }
 
         userRepository.delete(user);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<MyBoardResponse> getBoardsILiked(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException("존재 하지 않는 사용자입니다."));
+        Page<Board> boards = boardRepository.findBoardsILiked(pageable,user);
+
+        return new PageImpl<>(toMyPageResponse(boards,user),pageable, boards.getTotalElements());
+    }
+
+    public List<MyBoardResponse> toMyPageResponse(Page<Board> boards, User user) {
+        return boards.stream().map(board -> board.toMyBoardResponse(user))
+            .collect(Collectors.toUnmodifiableList());
     }
 }

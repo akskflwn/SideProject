@@ -1,7 +1,7 @@
 package com.test.project.entity.board.entity;
 
 import com.test.project.entity.BaseTimeEntity;
-import com.test.project.entity.board.dto.BoardDto.Response.MyBoardResponse;
+import com.test.project.entity.board.dto.BoardDto.MyBoardResponse;
 import com.test.project.entity.user.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
