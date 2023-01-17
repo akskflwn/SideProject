@@ -143,11 +143,23 @@ public class BoardController {
         return ResponseEntity.ok(boardService.saveSubReply(userId, subRequestDto));
     }
 
+    /**
+     * 댓글 수정 메서드
+     * @param dto
+     * @param userId
+     * @return replyId
+     */
     @PostMapping("/reply/update")
     public ResponseEntity<Long> updateReply(@Valid @RequestBody Request dto, @AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(boardService.updateReply(dto, userId));
     }
 
+    /**
+     * 댓글 삭제 메서드
+     * @param replyId
+     * @param userId
+     * @return void
+     */
     @PostMapping("/reply/delete/{replyId}")
     public ResponseEntity<Void> deleteReply(@PathVariable Long replyId, @AuthenticationPrincipal Long userId) {
         boardService.deleteReply(replyId, userId);
