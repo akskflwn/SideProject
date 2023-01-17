@@ -119,10 +119,14 @@ public class UserService {
         return new PageImpl<>(toMyPageResponse(boards, user), pageable, boards.getTotalElements());
     }
 
-    public List<MyBoardResponse> toMyPageResponse(Page<Board> boards, User user) {
+    public List<BoardDto.MyBoardResponse> toMyPageResponse(Page<Board> boards, User user) {
         return boards.stream().map(board -> board.toMyBoardResponse(user))
             .collect(Collectors.toList());
     }
 
-
+    public Page<BoardDto.MyBoardResponse> getMyBoards(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException("존재하지 않는 사용자입니다."));
+        Page<Board> boards = boardRepository.findByUser(pageable, user);
+        return new PageImpl<>(toMyPageResponse(boards,user), pageable, boards.getTotalElements());
+    }
 }

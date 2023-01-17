@@ -126,7 +126,18 @@ public class UserController {
     }
 
     /**
-     * 내가 좋아요 누른 게시물 리스트
+     * 내가 작성한 게시글 조회 메서드
+     * @param pageable
+     * @param userId
+     * @return
+     */
+    @GetMapping("mypage/board")
+    public ResponseEntity<Page> getMyBoards(@PageableDefault Pageable pageable, @AuthenticationPrincipal Long userId){
+        return ResponseEntity.ok(userService.getMyBoards(userId,pageable));
+    }
+
+    /**
+     * 내가 좋아요 누른 게시글 조회 메서드
      *
      * @param pageable
      * @param userId
@@ -138,6 +149,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getBoardsILiked(userId, pageable));
     }
 
+    /**
+     * 내가 댓글 작성한 게시글 조회 메서드
+     *
+     * @param pageable
+     * @param userId
+     * @return Page
+     */
     @GetMapping("/mypage/board/replied")
     public ResponseEntity<Page<MyBoardResponse>> getBoardsIReplied(
         @PageableDefault Pageable pageable,

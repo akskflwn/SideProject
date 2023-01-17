@@ -27,10 +27,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "WHERE l.user = :user")
     Page<Board> findBoardsILiked(Pageable pageable, User user);
 
-//    @Query(value = "SELECT DISTINCT b FROM Board b " +
-//    "j")
-//    Page<Board> findBoardsIReplied(Pageable pageable, User user);
-
     @Query(value = "SELECT DISTINCT b FROM Board b " +
         "JOIN FETCH b.user " +
         "JOIN b.replies r " +
@@ -40,4 +36,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "JOIN b.replies r " +
             "WHERE r.user = :user")
     Page<Board> findBoardsIReplied(Pageable pageable, User user);
+
+    @Query(value = "SELECT DISTINCT b FROM Board b " +
+        "JOIN FETCH b.user " +
+        "WHERE b.user = :user " +
+        "ORDER BY b.id DESC",
+        countQuery = "SELECT COUNT(b) FROM Board b " +
+            "WHERE b.user = :user")
+    Page<Board> findByUser(Pageable pageable, User user);
 }
