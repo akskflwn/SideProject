@@ -4,9 +4,11 @@ import static com.test.project.constants.SortStatus.DEFAULT;
 import static com.test.project.constants.SortStatus.LIKES;
 
 import com.test.project.constants.SortStatus;
+import com.test.project.entity.board.dto.LikeDto;
 import com.test.project.entity.board.dto.ReplyDto.Request;
 import com.test.project.entity.board.dto.ReplyDto.SuperRequest;
 import com.test.project.entity.board.entity.Board;
+import com.test.project.entity.board.entity.Like;
 import com.test.project.entity.board.entity.Reply;
 import com.test.project.entity.board.dto.BoardDto;
 import com.test.project.entity.board.dto.BoardDto.SaveRequest;
@@ -17,6 +19,7 @@ import com.test.project.entity.board.repository.LikeRepository;
 import com.test.project.entity.board.repository.ReplyRepository;
 import com.test.project.entity.user.User;
 import com.test.project.entity.user.UserRepository;
+import com.test.project.exception.LikeNotFoundException;
 import com.test.project.exception.board.BoardNotFoundException;
 import com.test.project.exception.board.ReplyNotFoundException;
 import com.test.project.exception.user.UserNotFoundException;
@@ -219,5 +222,27 @@ public class BoardService {
     private Reply getReply(Long replyId) {
         return replyRepository.findById(replyId)
             .orElseThrow(() -> new ReplyNotFoundException("댓글이 존재하지 않습니다."));
+    }
+
+    public LikeDto likeProcess(Long boardId, Long userId) {
+
+        User user = getUser(userId);
+        Board board = getBoard(boardId);
+
+        boolean likeStatus = false;
+        if (!isLiked(user, board)) {
+            likeRepository.save(Like.builder()
+                .user(user)
+                .board(board).build());
+            likeStatus = true;
+        } else {
+            Like like = likeRepository.findByUserAndBoard(user, board)
+                .orElseThrow(() -> new LikeNotFoundException("좋아요 누른 게시물이 없습니다."));
+            likeRepository.delete(like);
+        }
+
+        return LikeDto.builder()
+            .likeStatus(likeStatus)
+            .count(likeRepository.countByBoard(board)).build();
     }
 }

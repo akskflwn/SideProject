@@ -5,6 +5,7 @@ import static com.test.project.constants.SortStatus.LIKES;
 
 import com.test.project.entity.board.dto.BoardDto;
 import com.test.project.entity.board.dto.BoardDto.UpdateRequest;
+import com.test.project.entity.board.dto.LikeDto;
 import com.test.project.entity.board.dto.ReplyDto.Request;
 import com.test.project.entity.board.dto.ReplyDto.SuperRequest;
 import com.test.project.entity.board.service.BoardService;
@@ -75,9 +76,11 @@ public class BoardController {
     }
 
     /**
+     * 게시글 전체 조회 (id 기준 내림차순으로 출력한다.)
+     *
      * @param userId
      * @param pageable
-     * @return 게시글 전체 조회 (id 기준 내림차순으로 출력한다.)
+     * @return Page
      */
     @GetMapping("/list")
     public ResponseEntity<Page<BoardDto.Response>> getBoardList(
@@ -87,9 +90,11 @@ public class BoardController {
     }
 
     /**
+     * 게시글 전체 조회 (좋아요 순, id 내림차순으로 출력한다.)
+     *
      * @param userId
      * @param pageable
-     * @return 게시글 전체 조회 (좋아요 순, id 내림차순으로 출력한다.)
+     * @return
      */
     @GetMapping("/list/likes")
     public ResponseEntity<Page<BoardDto.Response>> getBoardListByLikes(
@@ -102,7 +107,7 @@ public class BoardController {
      *
      * @param boardId
      * @param userId
-     * @return
+     * @return HttpStatus.ok
      */
     @PostMapping("/delete/{boardId}")
     public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId,
@@ -145,25 +150,37 @@ public class BoardController {
 
     /**
      * 댓글 수정 메서드
+     *
      * @param dto
      * @param userId
      * @return replyId
      */
     @PostMapping("/reply/update")
-    public ResponseEntity<Long> updateReply(@Valid @RequestBody Request dto, @AuthenticationPrincipal Long userId) {
+    public ResponseEntity<Long> updateReply(@Valid @RequestBody Request dto,
+        @AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(boardService.updateReply(dto, userId));
     }
 
     /**
      * 댓글 삭제 메서드
+     *
      * @param replyId
      * @param userId
      * @return void
      */
     @PostMapping("/reply/delete/{replyId}")
-    public ResponseEntity<Void> deleteReply(@PathVariable Long replyId, @AuthenticationPrincipal Long userId) {
+    public ResponseEntity<Void> deleteReply(@PathVariable Long replyId,
+        @AuthenticationPrincipal Long userId) {
         boardService.deleteReply(replyId, userId);
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/like/{boardId}")
+    public ResponseEntity<LikeDto> hitLike(@PathVariable Long boardId, @AuthenticationPrincipal Long userId) {
+        if(userId == null){
+            throw new UserNotLoginedException();
+        }
+
+        return ResponseEntity.ok(boardService.likeProcess(boardId,userId));
+    }
 }
