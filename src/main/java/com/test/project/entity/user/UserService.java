@@ -88,10 +88,11 @@ public class UserService {
         }
 
     }
+
     @Transactional
     public void delete(DeleteRequest requestDto, Long userId) {
         User user = userRepository.findById(userId)
-        .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
+            .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자 입니다."));
 
         if (!requestDto.checkPassword(user.getPassword())) {
             throw new WrongPasswordException();
@@ -101,15 +102,27 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<MyBoardResponse> getBoardsILiked(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundException("존재 하지 않는 사용자입니다."));
-        Page<Board> boards = boardRepository.findBoardsILiked(pageable,user);
+    public Page<BoardDto.MyBoardResponse> getBoardsILiked(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("존재 하지 않는 사용자입니다."));
+        Page<Board> boards = boardRepository.findBoardsILiked(pageable, user);
 
-        return new PageImpl<>(toMyPageResponse(boards,user),pageable, boards.getTotalElements());
+        return new PageImpl<>(toMyPageResponse(boards, user), pageable, boards.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<BoardDto.MyBoardResponse> getBoardsIReplied(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("존재 하지 않는 사용자입니다."));
+        Page<Board> boards = boardRepository.findBoardsIReplied(pageable, user);
+
+        return new PageImpl<>(toMyPageResponse(boards, user), pageable, boards.getTotalElements());
     }
 
     public List<MyBoardResponse> toMyPageResponse(Page<Board> boards, User user) {
         return boards.stream().map(board -> board.toMyBoardResponse(user))
-            .collect(Collectors.toUnmodifiableList());
+            .collect(Collectors.toList());
     }
+
+
 }

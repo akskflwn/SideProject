@@ -127,14 +127,22 @@ public class UserController {
 
     /**
      * 내가 좋아요 누른 게시물 리스트
+     *
      * @param pageable
      * @param userId
      * @return Page
      */
     @GetMapping("/mypage/board/liked")
-    public ResponseEntity<Page<MyBoardResponse  >> getBoardILiked(@PageableDefault Pageable pageable,
-        @AuthenticationPrincipal Long userId){
-        return ResponseEntity.ok(userService.getBoardsILiked(userId,pageable));
+    public ResponseEntity<Page<MyBoardResponse>> getBoardILiked(@PageableDefault Pageable pageable,
+        @AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(userService.getBoardsILiked(userId, pageable));
+    }
+
+    @GetMapping("/mypage/board/replied")
+    public ResponseEntity<Page<MyBoardResponse>> getBoardsIReplied(
+        @PageableDefault Pageable pageable,
+        @AuthenticationPrincipal Long userId) {
+        return ResponseEntity.ok(userService.getBoardsIReplied(userId, pageable));
     }
 
 }
