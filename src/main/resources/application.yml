@@ -2,7 +2,7 @@ OAuth2:
   google:
     url: https://accounts.google.com/o/oauth2/v2/auth
     client-id: 178251444280-mj1d1i1r6mrktsbn67oq8fhm5i8t4d92.apps.googleusercontent.com
-    client-secret: ENC(yTzdaQoK0IpV4jvV+alGMibc7A++mkh9EEgjgKaOYE5oW5KgSLcSotMwI441FXtD)
+    client-secret: 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
     callback-url: http://localhost:8080/auth/google/callback
     scope: https://www.googleapis.com/auth/user.info.email https://www.googleapis.com/auth/userinfo_profile
     token-url: https://oauth2.googleapis.com/token
@@ -12,7 +12,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://database-1.c93lb4zhbxqs.ap-northeast-2.rds.amazonaws.com:3306/board?serverTimezone=Asia/Seoul
     username: sky
-    password: ENC(1XP3dvQwBbzx1XcePM3ow1qnhaECmWgC)
+    password: aod9ek!!
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
