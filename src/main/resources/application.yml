@@ -10,9 +10,9 @@ OAuth2:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/board?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://database-1.c93lb4zhbxqs.ap-northeast-2.rds.amazonaws.com:3306/board?serverTimezone=Asia/Seoul
     username: sky
-    password: ENC(PfQpff3KwIKfKc9m+wV4Bg==)
+    password: ENC(1XP3dvQwBbzx1XcePM3ow1qnhaECmWgC)
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
@@ -25,7 +25,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
