@@ -2,9 +2,9 @@ package com.test.project.socialLogin.account.social.service;
 
 import com.test.project.socialLogin.account.social.config.Constant.SocialLoginType;
 import com.test.project.socialLogin.account.social.SocialOauth;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

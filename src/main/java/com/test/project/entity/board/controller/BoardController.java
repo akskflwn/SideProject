@@ -10,7 +10,7 @@ import com.test.project.entity.board.dto.ReplyDto.Request;
 import com.test.project.entity.board.dto.ReplyDto.SuperRequest;
 import com.test.project.entity.board.service.BoardService;
 import com.test.project.exception.user.UserNotLoginedException;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

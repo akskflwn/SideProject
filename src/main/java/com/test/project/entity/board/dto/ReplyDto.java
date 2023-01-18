@@ -1,10 +1,10 @@
 package com.test.project.entity.board.dto;
 
 import com.test.project.entity.board.entity.Reply;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
