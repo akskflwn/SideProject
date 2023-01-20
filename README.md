@@ -53,13 +53,13 @@ Java, SpringBoot, SpringDataJpa, SpringSecurity, MySql, AWS(EC2, RDS)
 - [x]  내가 댓글단 게시물 조회 기능 구현
 - [x]  내가 작성한 게시물 조회 기능 구현
 
-**Commits on Jan 18, 2023
+**Commits on Jan 18, 2023**
 - [x]  EC2 배포 RDS 설정 완료
 
-**Commits on Jan 19, 2023
+**Commits on Jan 19, 2023**
 - [x]  프론트 프로젝트 생성
 - [x]  Header Footer 스켈레톤 생성 
 - [x]  게시판 초기 화면 생성
 
-**Commits on Jan 19, 2023
+**Commits on Jan 20, 2023**
 - [x]  로그인 초기 화면 생성
