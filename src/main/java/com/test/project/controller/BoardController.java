@@ -1,14 +1,14 @@
-package com.test.project.entity.board.controller;
+package com.test.project.controller;
 
 import static com.test.project.constants.SortStatus.DEFAULT;
 import static com.test.project.constants.SortStatus.LIKES;
 
-import com.test.project.entity.board.dto.BoardDto;
-import com.test.project.entity.board.dto.BoardDto.UpdateRequest;
-import com.test.project.entity.board.dto.LikeDto;
-import com.test.project.entity.board.dto.ReplyDto.Request;
-import com.test.project.entity.board.dto.ReplyDto.SuperRequest;
-import com.test.project.entity.board.service.BoardService;
+import com.test.project.dto.BoardDto;
+import com.test.project.dto.BoardDto.UpdateRequest;
+import com.test.project.dto.LikeDto;
+import com.test.project.dto.ReplyDto.Request;
+import com.test.project.dto.ReplyDto.SuperRequest;
+import com.test.project.service.BoardService;
 import com.test.project.exception.user.UserNotLoginedException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.test.project.entity.board.dto.BoardDto.SaveRequest;
+import com.test.project.dto.BoardDto.SaveRequest;
 
 @RestController
 @RequiredArgsConstructor

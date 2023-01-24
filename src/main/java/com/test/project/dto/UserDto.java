@@ -1,5 +1,6 @@
-package com.test.project.entity.user;
+package com.test.project.dto;
 
+import com.test.project.entity.User;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -45,6 +46,8 @@ public class UserDto {
 
     @Builder
     @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class LoginRequest {
 
         @NotBlank(message = "이메일 주소를 입력해주세요")
@@ -79,17 +82,30 @@ public class UserDto {
     }
 
     @Getter
+    @Builder
+    @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class UpdateRequest{
 
         @NotBlank(message = "닉네임을 입력해주세요")
         @Size(min=2, max = 12 , message = "닉네임은 3자 이상 12자 이하를 입력해주세요")
         private String nickname;
-    
+
+        @NotBlank(message = "기존 비밀번호를 입력해주세요")
+        @Size(min = 3, max = 12, message = "숫자, 문자, 특수문자 중 2가지를 조합해주세요")
+        private String currentPassword;
+
         @NotBlank(message = "비밀번호를 입력해주세요")
         @Size(min = 3, max = 12, message = "숫자, 문자, 특수문자 중 2가지를 조합해주세요")
-        private String password;
-        
+        private String newPassword;
+
+        public boolean checkPassword(String password) {
+            return currentPassword.equals(password);
+        }
+
+        public boolean isAlreadyMyPassword() {
+            return currentPassword.equals(newPassword);
+        }
     }
 
     @Builder

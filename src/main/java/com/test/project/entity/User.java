@@ -1,12 +1,16 @@
-package com.test.project.entity.user;
+package com.test.project.entity;
 
 import com.test.project.entity.BaseTimeEntity;
-import com.test.project.entity.user.UserDto.MyInfoResponse;
-import com.test.project.entity.user.UserDto.UpdateRequest;
+import com.test.project.entity.Like;
+import com.test.project.dto.UserDto.MyInfoResponse;
+import com.test.project.dto.UserDto.UpdateRequest;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,6 +38,9 @@ public class User extends BaseTimeEntity {
 
     private String password;
 
+    @OneToMany(mappedBy = "user")
+    private List<Like> postLikeds = new ArrayList<>();
+
 
     public MyInfoResponse toUserInfoResponse() {
         return MyInfoResponse.builder()
@@ -45,6 +52,11 @@ public class User extends BaseTimeEntity {
 
     public void updateUser(UpdateRequest updateRequestDto) {
         this.nickname = updateRequestDto.getNickname();
-        this.password = updateRequestDto.getPassword();
+        this.password = updateRequestDto.getNewPassword();
+    }
+
+    public void updateUser(String newPassword, String nickname) {
+        this.nickname = nickname;
+        this.password = newPassword;
     }
 }

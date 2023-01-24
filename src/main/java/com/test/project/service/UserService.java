@@ -1,18 +1,20 @@
-package com.test.project.entity.user;
+package com.test.project.service;
 
-import com.test.project.entity.board.dto.BoardDto;
-import com.test.project.entity.board.dto.BoardDto.MyBoardResponse;
-import com.test.project.entity.board.entity.Board;
-import com.test.project.entity.board.repository.BoardRepository;
-import com.test.project.entity.user.UserDto.CreateRequest;
-import com.test.project.entity.user.UserDto.DeleteRequest;
-import com.test.project.entity.user.UserDto.LoginRequest;
-import com.test.project.entity.user.UserDto.MyInfoResponse;
-import com.test.project.entity.user.UserDto.UpdateRequest;
+import com.test.project.dto.BoardDto;
+import com.test.project.entity.Board;
+import com.test.project.entity.User;
+import com.test.project.repository.BoardRepository;
+import com.test.project.dto.UserDto.CreateRequest;
+import com.test.project.dto.UserDto.DeleteRequest;
+import com.test.project.dto.UserDto.LoginRequest;
+import com.test.project.dto.UserDto.MyInfoResponse;
+import com.test.project.dto.UserDto.UpdateRequest;
+import com.test.project.exception.user.AlreadyMyPasswordException;
 import com.test.project.exception.user.DuplicatedEmailException;
 import com.test.project.exception.user.DuplicatedNicknameException;
 import com.test.project.exception.user.UserNotFoundException;
 import com.test.project.exception.user.WrongPasswordException;
+import com.test.project.repository.UserRepository;
 import com.test.project.security.TokenProvider;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +35,7 @@ public class UserService {
     private final TokenProvider tokenProvider;
     private final BoardRepository boardRepository;
 
+    @Transactional
     public void create(CreateRequest requestDto) {
         checkDuplicatedForCreate(requestDto);
 
@@ -71,12 +74,18 @@ public class UserService {
     }
 
     @Transactional
-    public void update(UpdateRequest updateRequestDto, Long userId) {
+    public void update(UpdateRequest updateRequest, Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다."));
+        checkDuplicatedForUpdate(user, updateRequest);
 
-        checkDuplicatedForUpdate(user, updateRequestDto);
-        user.updateUser(updateRequestDto);
+        if (!updateRequest.checkPassword(user.getPassword())) {
+            throw new WrongPasswordException();
+        }
+        if (updateRequest.isAlreadyMyPassword()) {
+            throw new AlreadyMyPasswordException();
+        }
+        user.updateUser(updateRequest.getNewPassword(),updateRequest.getNickname());
         userRepository.save(user);
     }
 

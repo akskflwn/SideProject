@@ -1,14 +1,15 @@
-package com.test.project.entity.user;
+package com.test.project.controller;
 
 import static com.test.project.constants.ResponseConstants.CREATED;
 import static com.test.project.constants.ResponseConstants.OK;
 
-import com.test.project.entity.board.dto.BoardDto.MyBoardResponse;
-import com.test.project.entity.user.UserDto.CreateRequest;
-import com.test.project.entity.user.UserDto.DeleteRequest;
-import com.test.project.entity.user.UserDto.LoginRequest;
-import com.test.project.entity.user.UserDto.MyInfoResponse;
-import com.test.project.entity.user.UserDto.UpdateRequest;
+import com.test.project.dto.BoardDto.MyBoardResponse;
+import com.test.project.dto.UserDto.CreateRequest;
+import com.test.project.dto.UserDto.DeleteRequest;
+import com.test.project.dto.UserDto.LoginRequest;
+import com.test.project.dto.UserDto.MyInfoResponse;
+import com.test.project.dto.UserDto.UpdateRequest;
+import com.test.project.service.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,12 +51,12 @@ public class UserController {
     /**
      * 로그인 메서드
      *
-     * @param loginRequestDto
+     * @param requestDto
      * @return
      */
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest loginRequestDto) {
-        String token = userService.login(loginRequestDto);
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequest requestDto) {
+        String token = userService.login(requestDto);
         ResponseCookie responseCookie = ResponseCookie.from("access-token", token)
             .httpOnly(true)
             .path("/")
@@ -97,14 +98,14 @@ public class UserController {
     /**
      * 회원 정보 수정 메서드
      *
-     * @param updateRequestDto
+     * @param requestDto
      * @param userId
      * @return ResponseEntity.ok().build();
      */
     @PutMapping("/update")
-    public ResponseEntity<Void> update(@Valid @RequestBody UpdateRequest updateRequestDto,
+    public ResponseEntity<Void> update(@Valid @RequestBody UpdateRequest requestDto,
         @AuthenticationPrincipal Long userId) {
-        userService.update(updateRequestDto, userId);
+        userService.update(requestDto, userId);
 
         return OK;
     }

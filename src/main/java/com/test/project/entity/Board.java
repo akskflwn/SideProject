@@ -1,9 +1,7 @@
-package com.test.project.entity.board.entity;
+package com.test.project.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.test.project.entity.BaseTimeEntity;
-import com.test.project.entity.board.dto.BoardDto.MyBoardResponse;
-import com.test.project.entity.user.User;
+import com.test.project.dto.BoardDto.MyBoardResponse;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

@@ -1,7 +1,7 @@
-package com.test.project.entity.board.repository;
+package com.test.project.repository;
 
-import com.test.project.entity.board.entity.Board;
-import com.test.project.entity.user.User;
+import com.test.project.entity.Board;
+import com.test.project.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

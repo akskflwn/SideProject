@@ -1,7 +1,6 @@
-package com.test.project.entity.board.entity;
+package com.test.project.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.test.project.entity.user.User;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;

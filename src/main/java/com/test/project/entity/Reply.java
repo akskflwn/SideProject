@@ -1,12 +1,10 @@
-package com.test.project.entity.board.entity;
+package com.test.project.entity;
 
 
 
 import static javax.persistence.FetchType.LAZY;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.test.project.entity.BaseTimeEntity;
-import com.test.project.entity.user.User;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;

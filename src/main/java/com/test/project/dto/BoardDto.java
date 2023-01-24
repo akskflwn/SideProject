@@ -1,7 +1,7 @@
-package com.test.project.entity.board.dto;
+package com.test.project.dto;
 
-import com.test.project.entity.board.entity.Board;
-import com.test.project.entity.user.User;
+import com.test.project.entity.Board;
+import com.test.project.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotBlank;

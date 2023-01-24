@@ -1,4 +1,4 @@
-package com.test.project.security.dto;
+package com.test.project.dto;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

@@ -1,9 +1,9 @@
-package com.test.project.entity.board.repository;
+package com.test.project.repository;
 
 
-import com.test.project.entity.board.entity.Board;
-import com.test.project.entity.board.entity.Like;
-import com.test.project.entity.user.User;
+import com.test.project.entity.Board;
+import com.test.project.entity.Like;
+import com.test.project.entity.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

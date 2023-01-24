@@ -1,6 +1,6 @@
 package com.test.project.security;
 
-import com.test.project.entity.user.User;
+import com.test.project.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

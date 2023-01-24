@@ -15,10 +15,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-            .allowCredentials(true)
-            .allowedOriginPatterns(ALLOWED_ORIGIN_PATTERNS)
-            .allowedMethods(ALLOWED_METHODS)
-            .allowedHeaders(ALLOWED_HEADERS)
-            .maxAge(MAX_AGE_SECOND);
+                .allowCredentials(true)
+                .allowedOriginPatterns(ALLOWED_ORIGIN_PATTERNS)
+                .allowedMethods(ALLOWED_METHODS)
+                .allowedHeaders(ALLOWED_HEADERS)
+                .maxAge(MAX_AGE_SECOND);
     }
 }

@@ -1,4 +1,4 @@
-package com.test.project.entity.board.dto;
+package com.test.project.dto;
 
 import lombok.Builder;
 import lombok.Getter;
