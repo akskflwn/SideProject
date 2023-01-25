@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,8 @@ public class BoardDto {
 
     @Getter
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class SaveRequest {
 
         @NotNull(message = "제목을 입력해주세요")
@@ -34,6 +37,8 @@ public class BoardDto {
 
     @Getter
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class UpdateRequest {
 
         @NotBlank(message = "제목을 입력해 주세요.")

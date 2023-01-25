@@ -5,13 +5,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class ReplyDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
     public static class Request {
 
         //댓글 Id
@@ -24,6 +29,8 @@ public class ReplyDto {
 
     @Getter
     @Builder
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
     public static class SuperRequest {
 
         //게시글 Id
