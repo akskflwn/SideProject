@@ -44,6 +44,7 @@ public class User extends BaseTimeEntity {
 
     public MyInfoResponse toUserInfoResponse() {
         return MyInfoResponse.builder()
+            .id(this.id)
             .email(this.email)
             .name(this.name)
             .nickname(this.nickname)

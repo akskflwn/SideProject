@@ -76,6 +76,7 @@ public class UserDto {
     @Getter
     @Builder
     public static class MyInfoResponse {
+        private Long id;
         private String nickname;
         private String email;
         private String name;

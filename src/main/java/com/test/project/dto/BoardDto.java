@@ -81,6 +81,8 @@ public class BoardDto {
 
         private boolean likeStatus;
 
+        private String imgUrl;
+
         private List<ReplyDto.Response> replyList;
 
         private LocalDateTime createdAt;
@@ -99,6 +101,7 @@ public class BoardDto {
             this.likeCount = board.getLikes().size();
             this.likeStatus = isLiked;
             this.replyList = replies;
+            this.imgUrl = board.getImgUrl();
             this.createdAt = board.getCreatedAt();
             this.updatedAt = board.getUpdatedAt();
         }

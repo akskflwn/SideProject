@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -25,7 +26,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         countQuery = "SELECT COUNT(b) FROM Board b " +
             "JOIN b.likes l " +
             "WHERE l.user = :user")
-    Page<Board> findBoardsILiked(Pageable pageable, User user);
+    Page<Board> findBoardsILiked(Pageable pageable,  @Param("user")User user);
 
     @Query(value = "SELECT DISTINCT b FROM Board b " +
         "JOIN FETCH b.user " +
@@ -35,7 +36,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         countQuery = "SELECT COUNT(b) FROM Board b " +
             "JOIN b.replies r " +
             "WHERE r.user = :user")
-    Page<Board> findBoardsIReplied(Pageable pageable, User user);
+    Page<Board> findBoardsIReplied(Pageable pageable, @Param("user") User user);
 
     @Query(value = "SELECT DISTINCT b FROM Board b " +
         "JOIN FETCH b.user " +
@@ -43,5 +44,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
         "ORDER BY b.id DESC",
         countQuery = "SELECT COUNT(b) FROM Board b " +
             "WHERE b.user = :user")
-    Page<Board> findByUser(Pageable pageable, User user);
+    Page<Board> findByUser(Pageable pageable, @Param("user") User user);
 }
