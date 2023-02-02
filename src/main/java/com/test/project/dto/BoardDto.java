@@ -26,11 +26,21 @@ public class BoardDto {
         @NotBlank(message = "내용을 입력해주세요")
         private String content;
 
+
         public Board toEntity(User user) {
             return Board.builder()
                 .user(user)
                 .title(title)
                 .content(content)
+                .build();
+        }
+
+        public Board toEntity2(User user, String imageUrl) {
+            return Board.builder()
+                .user(user)
+                .title(title)
+                .content(content)
+                .imgUrl(imageUrl)
                 .build();
         }
     }
@@ -46,6 +56,9 @@ public class BoardDto {
 
         @NotBlank(message = "내용을 입력해 주세요.")
         private String content;
+
+        @NotBlank(message = "사진을 사용해주세요.")
+        private String imageUrl;
 
     }
 
@@ -73,6 +86,7 @@ public class BoardDto {
         private LocalDateTime createdAt;
 
         private LocalDateTime updatedAt;
+
 
         @Builder
         public Response(Board board, List<ReplyDto.Response> replies, boolean isLiked) {
@@ -105,6 +119,8 @@ public class BoardDto {
         private String nickname; //작성자 닉네임
 
         private int likeCount; //좋아요 수
+
+        private String imgUrl;
 
         private int view; //조회수
 

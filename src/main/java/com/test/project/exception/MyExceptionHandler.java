@@ -4,11 +4,17 @@ package com.test.project.exception;
 import static com.test.project.constants.ResponseConstants.ALREADY_MY_PASSWORD;
 import static com.test.project.constants.ResponseConstants.DUPLICATED_EMAIL;
 import static com.test.project.constants.ResponseConstants.DUPLICATED_NICKNAME;
+import static com.test.project.constants.ResponseConstants.FAILED_IMAGE_CONVERT;
+import static com.test.project.constants.ResponseConstants.FAILED_IMAGE_UPLOAD;
+import static com.test.project.constants.ResponseConstants.IMAGE_NOT_FOUND;
 import static com.test.project.constants.ResponseConstants.NOT_LOGINED_USER;
 import static com.test.project.constants.ResponseConstants.USER_NOT_FOUND;
 import static com.test.project.constants.ResponseConstants.WRONG_EMAIL_OR_NAME;
 import static com.test.project.constants.ResponseConstants.WRONG_PASSWORD;
 
+import com.test.project.exception.image.FailedImageConvertException;
+import com.test.project.exception.image.FailedImageUploadException;
+import com.test.project.exception.image.ImageNotFoundException;
 import com.test.project.exception.user.AlreadyMyPasswordException;
 import com.test.project.exception.user.DuplicatedEmailException;
 import com.test.project.exception.user.DuplicatedNicknameException;
@@ -83,5 +89,28 @@ public class MyExceptionHandler {
         log.debug("erros = {}", errors);
         return ResponseEntity.badRequest().body(errors);
     }
+
+
+    @ExceptionHandler(ImageNotFoundException.class)
+    public final ResponseEntity<String> handleImageNotFoundException(
+        ImageNotFoundException exception) {
+        log.debug("이미지 파일을 찾는데 실패했습니다.", exception);
+        return IMAGE_NOT_FOUND;
+    }
+
+    @ExceptionHandler(FailedImageConvertException.class)
+    public final ResponseEntity<String> handleFailedToConvertImageException(
+        FailedImageConvertException exception) {
+        log.debug("이미지 파일 변환에 실패했습니다.", exception);
+        return FAILED_IMAGE_CONVERT;
+    }
+
+    @ExceptionHandler(FailedImageUploadException.class)
+    public final ResponseEntity<String> handleFailedToImageUploadException(
+        FailedImageUploadException exception) {
+        log.debug("이미지 업로드에 실패했습니다.", exception);
+        return FAILED_IMAGE_UPLOAD;
+    }
+
 }
 

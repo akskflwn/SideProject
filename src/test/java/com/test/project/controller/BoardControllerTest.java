@@ -2,7 +2,6 @@ package com.test.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.project.constants.SortStatus;
-import com.test.project.controller.BoardController;
 import com.test.project.dto.BoardDto;
 import com.test.project.dto.LikeDto;
 import com.test.project.dto.ReplyDto;
@@ -153,7 +152,7 @@ class BoardControllerTest {
             @DisplayName("[성공] 로그인 한 유저가 필수 데이터로 요청했을 때")
             void saveBoard_Success() throws Exception {
 
-                given(boardService.saveBoard(getSaveRequest(), testUser.getId()))
+                given(boardService.saveBoard(getSaveRequest(), testUser.getId(), multipartFile))
                     .willReturn(1L);
 
                 mockMvc.perform(
@@ -164,7 +163,8 @@ class BoardControllerTest {
                     .andDo(print())
                     .andExpect(status().isOk());
 
-                verify(boardService).saveBoard(any(BoardDto.SaveRequest.class), anyLong());
+                verify(boardService).saveBoard(any(BoardDto.SaveRequest.class), anyLong(),
+                    multipartFile);
             }
         }
 
@@ -172,7 +172,7 @@ class BoardControllerTest {
         @DisplayName("[실패] 로그인을 하지 않은 유저일 때")
         void saveBoardWithoutLogin_Fail() throws Exception {
 
-            given(boardService.saveBoard(getSaveRequest(), testUser.getId()))
+            given(boardService.saveBoard(getSaveRequest(), testUser.getId(), multipartFile))
                 .willThrow(UserNotLoginedException.class);
 
             mockMvc.perform(
@@ -183,7 +183,8 @@ class BoardControllerTest {
                 .andDo(print())
                 .andExpect(status().is4xxClientError());
 
-            verify(boardService, never()).saveBoard(any(BoardDto.SaveRequest.class), anyLong());
+            verify(boardService, never()).saveBoard(any(BoardDto.SaveRequest.class), anyLong(),
+                multipartFile);
         }
 
         @Test
@@ -194,7 +195,7 @@ class BoardControllerTest {
             BoardDto.SaveRequest dto = BoardDto.SaveRequest.builder()
                 .content("내용입니다.").build();
 
-            given(boardService.saveBoard(dto, testUser.getId()))
+            given(boardService.saveBoard(dto, testUser.getId(), multipartFile))
                 .willThrow(NullPointerException.class);
 
             mockMvc.perform(
@@ -205,7 +206,8 @@ class BoardControllerTest {
                 .andDo(print())
                 .andExpect(status().isBadRequest());
 
-            verify(boardService, never()).saveBoard(any(BoardDto.SaveRequest.class), anyLong());
+            verify(boardService, never()).saveBoard(any(BoardDto.SaveRequest.class), anyLong(),
+                multipartFile);
         }
 
     }

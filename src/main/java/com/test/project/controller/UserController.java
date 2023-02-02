@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1")
+@RequestMapping("api/v1")
 public class UserController {
 
     private final UserService userService;
@@ -44,6 +44,7 @@ public class UserController {
      */
     @PostMapping("/create")
     public ResponseEntity<Void> createUser(@Valid @RequestBody CreateRequest requestDto) {
+        log.info("컨트롤러 실행");
         userService.create(requestDto);
         return CREATED;
     }
@@ -78,6 +79,7 @@ public class UserController {
             .httpOnly(true)
             .path("/")
             .maxAge(0)
+
             .build();
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();

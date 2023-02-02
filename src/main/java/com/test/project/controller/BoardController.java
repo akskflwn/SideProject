@@ -12,6 +12,7 @@ import com.test.project.service.BoardService;
 import com.test.project.exception.user.UserNotLoginedException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -22,12 +23,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import com.test.project.dto.BoardDto.SaveRequest;
+import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/boards")
+@RequestMapping("api/v1/boards")
 public class BoardController {
 
     private final BoardService boardService;
@@ -42,10 +46,33 @@ public class BoardController {
     @PostMapping("/create")
     public ResponseEntity<Long> saveBoard(@Valid @RequestBody SaveRequest savedRequestDto,
         @AuthenticationPrincipal Long userId) {
+        log.info("유저아이디:{}", userId);
         if (userId == null) {
             throw new UserNotLoginedException();
         }
         return ResponseEntity.ok(boardService.saveBoard(savedRequestDto, userId));
+    }
+
+    /**
+     * 게시물 생성 메서드
+     * <p>
+     * //     * @param request
+     *
+     * @param userId
+     * @return
+     */
+    @PostMapping("/create-v2")
+    public ResponseEntity<Long> saveBoardWithImage(@AuthenticationPrincipal Long userId,
+        @Valid @RequestPart(value = "request", required = false) SaveRequest request,
+        @RequestPart(value = "multipartFile",required = false) MultipartFile multipartFile) {
+        log.info("유저아이디:{}", userId);
+//        log.info("제목 : {}, 내용 : {}, 이미지 : {}", request.getTitle(), request.getContent(),
+//            multipartFile);
+        log.info("사진 :{}", multipartFile);
+        if (userId == null) {
+            throw new UserNotLoginedException();
+        }
+        return ResponseEntity.ok(boardService.saveBoardWithImage(request, userId, multipartFile));
     }
 
     /**
@@ -176,11 +203,12 @@ public class BoardController {
     }
 
     @PostMapping("/like/{boardId}")
-    public ResponseEntity<LikeDto> hitLike(@PathVariable Long boardId, @AuthenticationPrincipal Long userId) {
-        if(userId == null){
+    public ResponseEntity<LikeDto> hitLike(@PathVariable Long boardId,
+        @AuthenticationPrincipal Long userId) {
+        if (userId == null) {
             throw new UserNotLoginedException();
         }
 
-        return ResponseEntity.ok(boardService.likeProcess(boardId,userId));
+        return ResponseEntity.ok(boardService.likeProcess(boardId, userId));
     }
 }

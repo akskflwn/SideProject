@@ -1,5 +1,7 @@
 package com.test.project.entity;
 
+import static javax.persistence.FetchType.LAZY;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.test.project.dto.BoardDto.MyBoardResponse;
 import java.util.List;
@@ -12,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -47,13 +50,15 @@ public class Board extends BaseTimeEntity {
 
     private int view;
 
+    private String imgUrl;
+
     private boolean isDeleted;
 
     @BatchSize(size = 100) //조회할 컬럼 최대 수
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "board", fetch = LAZY, cascade = CascadeType.REMOVE)
     private List<Like> likes;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "board", fetch = LAZY, cascade = CascadeType.REMOVE)
     private List<Reply> replies;
 
     public void updateBoard(String title, String content) {
@@ -78,6 +83,7 @@ public class Board extends BaseTimeEntity {
             .likeCount(this.likes.size())
             .isLiked(this.getLikes().stream().anyMatch(like -> like.getUser().equals(user)))
             .createdAt(this.getCreatedAt())
+            .imgUrl(this.imgUrl)
             .build();
     }
 

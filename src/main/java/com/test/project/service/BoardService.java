@@ -24,6 +24,7 @@ import com.test.project.exception.board.BoardNotFoundException;
 import com.test.project.exception.board.ReplyNotFoundException;
 import com.test.project.exception.user.UserNotFoundException;
 import com.test.project.exception.user.UserNotMatchException;
+import com.test.project.util.aws.AwsS3Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +36,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
@@ -45,7 +47,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
     private final ReplyRepository replyRepository;
-
+    private final AwsS3Service awsS3Service;
 
     public BoardDto.Response getBoardDetail(Long boardId, Long userId) {
         Board board = getBoard(boardId);
@@ -81,6 +83,15 @@ public class BoardService {
         boardRepository.save(board);
         return board.getId();
     }
+
+    @Transactional
+    public Long saveBoardWithImage(SaveRequest request, Long userId, MultipartFile multipartFile) {
+        String imageUrl = awsS3Service.uploadImage(multipartFile);
+        Board board = request.toEntity2(getUser(userId),imageUrl);
+        boardRepository.save(board);
+        return board.getId();
+    }
+
 
     @Transactional
     public Long updateBoard(Long boardId, UpdateRequest requestDto, Long userId) {
@@ -245,4 +256,7 @@ public class BoardService {
             .likeStatus(likeStatus)
             .count(likeRepository.countByBoard(board)).build();
     }
+
+
+
 }

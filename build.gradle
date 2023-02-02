@@ -45,6 +45,12 @@ dependencies {
 	//yml파일 암호화를 위한 jasypt
 	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4")
 
+	implementation 'javax.servlet:jstl'
+	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+
+	// s3
+	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2'
+
 }
 
 tasks.named('test') {
