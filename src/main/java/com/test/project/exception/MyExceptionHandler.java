@@ -2,6 +2,7 @@ package com.test.project.exception;
 
 
 import static com.test.project.constants.ResponseConstants.ALREADY_MY_PASSWORD;
+import static com.test.project.constants.ResponseConstants.DELETED_USER;
 import static com.test.project.constants.ResponseConstants.DUPLICATED_EMAIL;
 import static com.test.project.constants.ResponseConstants.DUPLICATED_NICKNAME;
 import static com.test.project.constants.ResponseConstants.FAILED_IMAGE_CONVERT;
@@ -18,6 +19,7 @@ import com.test.project.exception.image.ImageNotFoundException;
 import com.test.project.exception.user.AlreadyMyPasswordException;
 import com.test.project.exception.user.DuplicatedEmailException;
 import com.test.project.exception.user.DuplicatedNicknameException;
+import com.test.project.exception.user.UserDeletedException;
 import com.test.project.exception.user.UserNotFoundException;
 import com.test.project.exception.user.UserNotLoginedException;
 import com.test.project.exception.user.WrongEmailOrNameException;
@@ -60,6 +62,13 @@ public class MyExceptionHandler {
         WrongPasswordException exception) {
         log.debug("잘못된 비밀번호입니다.", exception);
         return WRONG_PASSWORD;
+    }
+
+    @ExceptionHandler(UserDeletedException.class)
+    public final ResponseEntity<String> handleUserDeletedException(
+        UserDeletedException exception) {
+        log.debug("탈퇴한 유저입니다.", exception);
+        return DELETED_USER;
     }
 
     @ExceptionHandler(AlreadyMyPasswordException.class)

@@ -182,7 +182,7 @@ public class UserControllerTest {
             .newPassword("1234")
             .build();
 
-        doNothing().when(userService).update(request, 1L);
+        doNothing().when(userService).update(request, profileImage, 1L);
 
         mockMvc.perform(
                 put("/v1/update")
@@ -192,7 +192,7 @@ public class UserControllerTest {
             .andDo(print())
             .andExpect(status().isOk());
 
-        verify(userService).update(any(UpdateRequest.class), any(Long.class));
+        verify(userService).update(any(UpdateRequest.class), profileImage, any(Long.class));
     }
 
     @Test
@@ -205,7 +205,8 @@ public class UserControllerTest {
             .newPassword("5678")
             .build();
 
-        doThrow(new WrongPasswordException()).when(userService).update(any(UpdateRequest.class), any(Long.class));
+        doThrow(new WrongPasswordException()).when(userService).update(any(UpdateRequest.class),
+            profileImage, any(Long.class));
 
         mockMvc.perform(
                 put("/v1/update")
@@ -215,7 +216,7 @@ public class UserControllerTest {
             .andDo(print())
             .andExpect(status().isUnauthorized());
 
-        verify(userService).update(any(UpdateRequest.class), any(Long.class));
+        verify(userService).update(any(UpdateRequest.class), profileImage, any(Long.class));
     }
 
     @Test
@@ -228,7 +229,8 @@ public class UserControllerTest {
             .newPassword("1234qwer!")
             .build();
 
-        doThrow(new AlreadyMyPasswordException()).when(userService).update(any(UpdateRequest.class), any(Long.class));
+        doThrow(new AlreadyMyPasswordException()).when(userService).update(any(UpdateRequest.class),
+            profileImage, any(Long.class));
 
         mockMvc.perform(
                 put("/v1/update")
@@ -238,7 +240,7 @@ public class UserControllerTest {
             .andDo(print())
             .andExpect(status().isConflict());
 
-        verify(userService).update(any(UpdateRequest.class), any(Long.class));
+        verify(userService).update(any(UpdateRequest.class), profileImage, any(Long.class));
     }
 
     @Test

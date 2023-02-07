@@ -43,6 +43,12 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Valid
+    @JsonIgnore
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     @Size(max = 50)
     private String title;
 
@@ -50,9 +56,11 @@ public class Board extends BaseTimeEntity {
 
     private int view;
 
-    private String imgUrl;
-
     private boolean isDeleted;
+
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 
     @BatchSize(size = 100) //조회할 컬럼 최대 수
     @OneToMany(mappedBy = "board", fetch = LAZY, cascade = CascadeType.REMOVE)
@@ -77,14 +85,20 @@ public class Board extends BaseTimeEntity {
     public MyBoardResponse toMyBoardResponse(User user) {
         return MyBoardResponse.builder()
             .id(this.id)
+            .categoryName(this.category.getCategoryName())
             .title(this.title)
+            .content(this.content)
             .nickname(this.user.getNickname())
+            .userImage(this.user.getImage().getImageUrl())
+            .boardImage(this.image.getImageUrl())
             .view(this.view)
             .likeCount(this.likes.size())
             .isLiked(this.getLikes().stream().anyMatch(like -> like.getUser().equals(user)))
             .createdAt(this.getCreatedAt())
-            .imgUrl(this.imgUrl)
             .build();
     }
 
+    public void setImage(Image image) {
+        this.image = image;
+    }
 }

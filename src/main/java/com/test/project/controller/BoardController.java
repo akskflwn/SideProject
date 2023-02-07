@@ -21,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -31,110 +32,46 @@ import org.springframework.web.multipart.MultipartFile;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/boards")
+@RequestMapping("api/boards")
 public class BoardController {
 
     private final BoardService boardService;
 
     /**
-     * 게시물 생성 메서드
-     *
-     * @param savedRequestDto
-     * @param userId
-     * @return
+     * 게시글 생성 메서드
      */
     @PostMapping("/create")
-    public ResponseEntity<Long> saveBoard(@Valid @RequestBody SaveRequest savedRequestDto,
+    public ResponseEntity<Long> createBoard(@Valid @RequestPart SaveRequest request,
+        @RequestPart(required = false) MultipartFile multipartFile,
         @AuthenticationPrincipal Long userId) {
-        log.info("유저아이디:{}", userId);
         if (userId == null) {
             throw new UserNotLoginedException();
         }
-        return ResponseEntity.ok(boardService.saveBoard(savedRequestDto, userId));
+        return ResponseEntity.ok(boardService.saveBoard(request, userId,multipartFile));
     }
 
     /**
-     * 게시물 생성 메서드
-     * <p>
-     * //     * @param request
-     *
-     * @param userId
-     * @return
+     * 게시글 상세 조회 메서드
      */
-    @PostMapping("/create-v2")
-    public ResponseEntity<Long> saveBoardWithImage(@AuthenticationPrincipal Long userId,
-        @Valid @RequestPart(value = "request", required = false) SaveRequest request,
-        @RequestPart(value = "multipartFile",required = false) MultipartFile multipartFile) {
-        log.info("유저아이디:{}", userId);
-//        log.info("제목 : {}, 내용 : {}, 이미지 : {}", request.getTitle(), request.getContent(),
-//            multipartFile);
-        log.info("사진 :{}", multipartFile);
-        if (userId == null) {
-            throw new UserNotLoginedException();
-        }
-        return ResponseEntity.ok(boardService.saveBoardWithImage(request, userId, multipartFile));
+    @GetMapping("/board/{boardId}")
+    public ResponseEntity<BoardDto.Response> getBoard(@PathVariable Long boardId,
+        @AuthenticationPrincipal Long currentUserId) {
+        return ResponseEntity.ok(boardService.getBoardDetail(boardId, currentUserId));
     }
 
     /**
-     * 특정 게시물 수정
-     *
-     * @param boardId
-     * @param updateRequestDto
-     * @param userId
-     * @return
+     * 게시글 수정 메서드
      */
     @PostMapping("/update/{boardId}")
-    public ResponseEntity<Long> updateBoard(@PathVariable Long boardId, @Valid @RequestBody
-    UpdateRequest updateRequestDto, @AuthenticationPrincipal Long userId) {
-        return ResponseEntity.ok(boardService.updateBoard(boardId, updateRequestDto, userId));
-    }
-
-    /**
-     * 특정 게시글 조회 메서드
-     *
-     * @param boardId
-     * @param userId
-     * @return
-     */
-    @GetMapping("/{boardId}")
-    public ResponseEntity<BoardDto.Response> getBoard(@PathVariable Long boardId,
+    public ResponseEntity<Long> updateBoard(@PathVariable Long boardId,
+        @Valid @RequestPart SaveRequest request,
+        @RequestPart(required = false) MultipartFile multipartFile,
         @AuthenticationPrincipal Long userId) {
-        return ResponseEntity.ok(boardService.getBoardDetail(boardId, userId));
+        return ResponseEntity.ok(boardService.updateBoard(boardId, request, multipartFile, userId));
     }
 
     /**
-     * 게시글 전체 조회 (id 기준 내림차순으로 출력한다.)
-     *
-     * @param userId
-     * @param pageable
-     * @return Page
-     */
-    @GetMapping("/list")
-    public ResponseEntity<Page<BoardDto.Response>> getBoardList(
-        @AuthenticationPrincipal Long userId, @PageableDefault
-    Pageable pageable) {
-        return ResponseEntity.ok(boardService.getBoardList(userId, pageable, DEFAULT));
-    }
-
-    /**
-     * 게시글 전체 조회 (좋아요 순, id 내림차순으로 출력한다.)
-     *
-     * @param userId
-     * @param pageable
-     * @return
-     */
-    @GetMapping("/list/likes")
-    public ResponseEntity<Page<BoardDto.Response>> getBoardListByLikes(
-        @AuthenticationPrincipal Long userId, @PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(boardService.getBoardList(userId, pageable, LIKES));
-    }
-
-    /**
-     * 게시물 삭제
-     *
-     * @param boardId
-     * @param userId
-     * @return HttpStatus.ok
+     * 게시글 삭제 메서드
      */
     @PostMapping("/delete/{boardId}")
     public ResponseEntity<Void> deleteBoard(@PathVariable Long boardId,
@@ -144,11 +81,28 @@ public class BoardController {
     }
 
     /**
+     * 게시글 전체 조회 (id 기준 내림차순으로 출력한다.)
+     */
+    @GetMapping("/list/latest")
+    public ResponseEntity<Page<BoardDto.Response>> getBoardList(
+        @AuthenticationPrincipal Long userId, @PageableDefault
+    Pageable pageable) {
+        return ResponseEntity.ok(boardService.getBoardList(userId, pageable, DEFAULT));
+    }
+
+    /**
+     * 게시글 전체 조회 (좋아요 순, id 내림차순으로 출력한다.)
+     */
+    @GetMapping("/list/likes")
+    public ResponseEntity<Page<BoardDto.Response>> getBoardListByLikes(
+        @AuthenticationPrincipal Long userId, @PageableDefault Pageable pageable) {
+        log.info("likes 실행");
+        return ResponseEntity.ok(boardService.getBoardList(userId, pageable, LIKES));
+    }
+
+
+    /**
      * 부모 댓글 작성
-     *
-     * @param superRequestDto
-     * @param userId
-     * @return replyId
      */
     @PostMapping("/reply/create/super")
     public ResponseEntity<Long> saveSuperReply(@Valid @RequestBody SuperRequest superRequestDto,
@@ -161,10 +115,6 @@ public class BoardController {
 
     /**
      * 자식 댓글 작성
-     *
-     * @param subRequestDto
-     * @param userId
-     * @return replyId
      */
     @PostMapping("/reply/create/sub")
     public ResponseEntity<Long> saveSubReply(@Valid @RequestBody Request subRequestDto,
@@ -177,10 +127,6 @@ public class BoardController {
 
     /**
      * 댓글 수정 메서드
-     *
-     * @param dto
-     * @param userId
-     * @return replyId
      */
     @PostMapping("/reply/update")
     public ResponseEntity<Long> updateReply(@Valid @RequestBody Request dto,
@@ -190,10 +136,6 @@ public class BoardController {
 
     /**
      * 댓글 삭제 메서드
-     *
-     * @param replyId
-     * @param userId
-     * @return void
      */
     @PostMapping("/reply/delete/{replyId}")
     public ResponseEntity<Void> deleteReply(@PathVariable Long replyId,
@@ -202,6 +144,9 @@ public class BoardController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 좋아요 등록 및 삭제 메서드
+     */
     @PostMapping("/like/{boardId}")
     public ResponseEntity<LikeDto> hitLike(@PathVariable Long boardId,
         @AuthenticationPrincipal Long userId) {

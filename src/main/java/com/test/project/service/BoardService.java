@@ -1,5 +1,6 @@
 package com.test.project.service;
 
+import static com.test.project.constants.DefaultImageConstants.DEFAULT_BOARD_IMAGE_ID;
 import static com.test.project.constants.SortStatus.DEFAULT;
 import static com.test.project.constants.SortStatus.LIKES;
 
@@ -8,13 +9,16 @@ import com.test.project.dto.LikeDto;
 import com.test.project.dto.ReplyDto.Request;
 import com.test.project.dto.ReplyDto.SuperRequest;
 import com.test.project.entity.Board;
+import com.test.project.entity.Category;
+import com.test.project.entity.Image;
 import com.test.project.entity.Like;
 import com.test.project.entity.Reply;
 import com.test.project.dto.BoardDto;
 import com.test.project.dto.BoardDto.SaveRequest;
-import com.test.project.dto.BoardDto.UpdateRequest;
 import com.test.project.dto.ReplyDto.Response;
+import com.test.project.exception.board.CategoryNotFoundException;
 import com.test.project.repository.BoardRepository;
+import com.test.project.repository.CategoryRepository;
 import com.test.project.repository.LikeRepository;
 import com.test.project.repository.ReplyRepository;
 import com.test.project.entity.User;
@@ -24,7 +28,6 @@ import com.test.project.exception.board.BoardNotFoundException;
 import com.test.project.exception.board.ReplyNotFoundException;
 import com.test.project.exception.user.UserNotFoundException;
 import com.test.project.exception.user.UserNotMatchException;
-import com.test.project.util.aws.AwsS3Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +50,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
     private final ReplyRepository replyRepository;
-    private final AwsS3Service awsS3Service;
+    private final CategoryRepository categoryRepository;
+    private final ImageService imageService;
+
 
     public BoardDto.Response getBoardDetail(Long boardId, Long userId) {
         Board board = getBoard(boardId);
@@ -61,68 +66,53 @@ public class BoardService {
             .replies(replyConvertToDto(getReplies(board)))
             .isLiked(isLikedByCurrentUser(userId, board))
             .build();
-
     }
 
-    private boolean isLikedByCurrentUser(Long userId, Board board) {
-        boolean isLiked = false;
-        if (userId != null && isLiked(getUser(userId), board)) {
-            isLiked = true;
+    @Transactional
+    public Long saveBoard(SaveRequest requestDTO, Long userId, MultipartFile multipartFile) {
+        Board board = requestDTO.toEntity(getUser(userId),getCategory(requestDTO.getCategoryId()));
+
+        Image image = getImage(multipartFile);
+        board.setImage(image);
+
+        boardRepository.save(board);
+
+        return board.getId();
+    }
+
+    private Image getImage(MultipartFile multipartFile) {
+        Image image;
+
+        if (multipartFile == null) {
+            image = imageService.getImageById(DEFAULT_BOARD_IMAGE_ID);
+        } else {
+            image = imageService.savePostImage(multipartFile);
         }
-        return isLiked;
-    }
 
-    private boolean isLiked(User user, Board board) {
-        return likeRepository.findByUserAndBoard(user, board).isPresent();
-    }
-
-
-    @Transactional
-    public Long saveBoard(SaveRequest savedRequestDto, Long userId) {
-        Board board = savedRequestDto.toEntity(getUser(userId));
-        boardRepository.save(board);
-        return board.getId();
+        return image;
     }
 
     @Transactional
-    public Long saveBoardWithImage(SaveRequest request, Long userId, MultipartFile multipartFile) {
-        String imageUrl = awsS3Service.uploadImage(multipartFile);
-        Board board = request.toEntity2(getUser(userId),imageUrl);
-        boardRepository.save(board);
-        return board.getId();
-    }
+    public Long updateBoard(Long boardId, SaveRequest requestDto, MultipartFile multipartFile,Long userId) {
 
-
-    @Transactional
-    public Long updateBoard(Long boardId, UpdateRequest requestDto, Long userId) {
         Board board = getBoard(boardId);
+
         User user = getUser(userId);
         if (user != board.getUser()) {
             throw new UserNotMatchException("본인이 작성한글만 수정할 수 있습니다.");
         }
+
+        if (!multipartFile.isEmpty()) {
+            Image image = imageService.savePostImage(multipartFile);
+            board.setImage(image);
+        }
+
         board.updateBoard(requestDto.getTitle(), requestDto.getContent());
+
         boardRepository.save(board);
         return board.getId();
     }
 
-
-    public Board getBoard(Long boardId) {
-        return boardRepository.findById(boardId)
-            .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시글 입니다."));
-    }
-
-
-    public User getUser(Long userId) {
-        return userRepository.findById(userId)
-            .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다."));
-    }
-
-    private List<Reply> getReplies(Board board) {
-        // 부모 댓글이 없는 최상위 댓글을 필터링하는 메서드
-        return board.getReplies().stream()
-            .filter(reply -> reply.getParentReply() == null)
-            .collect(Collectors.toList());
-    }
 
     private List<Response> replyConvertToDto(List<Reply> replies) {
         List<Response> responseList = new ArrayList<>();
@@ -149,6 +139,7 @@ public class BoardService {
     @Transactional
     public void deleteBoard(Long boardId, Long userId) {
         Board board = getBoard(boardId);
+
         User user = getUser(userId);
         if (user != board.getUser()) {
             throw new UserNotMatchException("본인이 작성한 글만 삭제할 수 있습니다");
@@ -230,10 +221,7 @@ public class BoardService {
         replyRepository.save(reply);
     }
 
-    private Reply getReply(Long replyId) {
-        return replyRepository.findById(replyId)
-            .orElseThrow(() -> new ReplyNotFoundException("댓글이 존재하지 않습니다."));
-    }
+
 
     public LikeDto likeProcess(Long boardId, Long userId) {
 
@@ -257,6 +245,45 @@ public class BoardService {
             .count(likeRepository.countByBoard(board)).build();
     }
 
+    public Category getCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new CategoryNotFoundException("존재하지 않는 카테고리입니다."));
+    }
+
+    private Reply getReply(Long replyId) {
+        return replyRepository.findById(replyId)
+            .orElseThrow(() -> new ReplyNotFoundException("댓글이 존재하지 않습니다."));
+    }
+
+    public Board getBoard(Long boardId) {
+        return boardRepository.findById(boardId)
+            .orElseThrow(() -> new BoardNotFoundException("존재하지 않는 게시글 입니다."));
+    }
+
+
+    public User getUser(Long userId) {
+        return userRepository.findById(userId)
+            .orElseThrow(() -> new UserNotFoundException("존재하지 않는 사용자입니다."));
+    }
+
+    private List<Reply> getReplies(Board board) {
+        // 부모 댓글이 없는 최상위 댓글을 필터링하는 메서드
+        return board.getReplies().stream()
+            .filter(reply -> reply.getParentReply() == null)
+            .collect(Collectors.toList());
+    }
+
+    private boolean isLikedByCurrentUser(Long userId, Board board) {
+        boolean isLiked = false;
+        if (userId != null && isLiked(getUser(userId), board)) {
+            isLiked = true;
+        }
+        return isLiked;
+    }
+
+    private boolean isLiked(User user, Board board) {
+        return likeRepository.findByUserAndBoard(user, board).isPresent();
+    }
 
 
 }

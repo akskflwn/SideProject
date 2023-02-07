@@ -44,12 +44,16 @@ dependencies {
 
 	//yml파일 암호화를 위한 jasypt
 	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4")
-
+	
+	//jsp
 	implementation 'javax.servlet:jstl'
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 
 	// s3
 	implementation 'io.awspring.cloud:spring-cloud-starter-aws:2.4.2'
+
+	//쿼리문 추적
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.1'
 
 }
 

@@ -1,7 +1,7 @@
 package com.test.project.entity;
 
-import com.test.project.entity.BaseTimeEntity;
-import com.test.project.entity.Like;
+import static javax.persistence.FetchType.LAZY;
+
 import com.test.project.dto.UserDto.MyInfoResponse;
 import com.test.project.dto.UserDto.UpdateRequest;
 import java.util.ArrayList;
@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
@@ -30,6 +32,10 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "image_id")
+    private Image image;
+
     private String email;
 
     private String name;
@@ -38,9 +44,14 @@ public class User extends BaseTimeEntity {
 
     private String password;
 
+    private Boolean isDeleted;
+
     @OneToMany(mappedBy = "user")
     private List<Like> postLikeds = new ArrayList<>();
 
+    public void setImage(Image image) {
+        this.image = image;
+    }
 
     public MyInfoResponse toUserInfoResponse() {
         return MyInfoResponse.builder()
@@ -48,6 +59,7 @@ public class User extends BaseTimeEntity {
             .email(this.email)
             .name(this.name)
             .nickname(this.nickname)
+            .profileImageUrl(this.image.getImageUrl())
             .build();
     }
 
@@ -59,5 +71,13 @@ public class User extends BaseTimeEntity {
     public void updateUser(String newPassword, String nickname) {
         this.nickname = nickname;
         this.password = newPassword;
+    }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
+    public void deleteUser() {
+        this.isDeleted = true;
     }
 }

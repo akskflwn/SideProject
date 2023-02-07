@@ -51,5 +51,8 @@ public class ResponseConstants {
     public static final ResponseEntity<String> IMAGE_NOT_FOUND =
         new ResponseEntity<>("이미지 파일을 찾는데 실패했습니다.", HttpStatus.NOT_FOUND);
 
+    public static final ResponseEntity<String> DELETED_USER =
+        new ResponseEntity<>("탈퇴한 유저입니다.", HttpStatus.NOT_FOUND);
+
 
 }

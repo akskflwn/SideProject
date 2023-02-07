@@ -1,6 +1,7 @@
 package com.test.project.dto;
 
 import com.test.project.entity.Board;
+import com.test.project.entity.Category;
 import com.test.project.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,9 @@ public class BoardDto {
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class SaveRequest {
 
+        @NotNull(message = "카테고리를 선택해 주세요.")
+        private Long categoryId;
+
         @NotNull(message = "제목을 입력해주세요")
         private String title;
 
@@ -27,20 +31,12 @@ public class BoardDto {
         private String content;
 
 
-        public Board toEntity(User user) {
+        public Board toEntity(User user, Category category) {
             return Board.builder()
                 .user(user)
+                .category(category)
                 .title(title)
                 .content(content)
-                .build();
-        }
-
-        public Board toEntity2(User user, String imageUrl) {
-            return Board.builder()
-                .user(user)
-                .title(title)
-                .content(content)
-                .imgUrl(imageUrl)
                 .build();
         }
     }
@@ -57,9 +53,6 @@ public class BoardDto {
         @NotBlank(message = "내용을 입력해 주세요.")
         private String content;
 
-        @NotBlank(message = "사진을 사용해주세요.")
-        private String imageUrl;
-
     }
 
     @Getter
@@ -69,7 +62,13 @@ public class BoardDto {
 
         private Long userId;
 
+        private Long categoryId;
+
         private String userNickname;
+
+        private String userProfileImage;
+
+        private String categoryName;
 
         private String title;
 
@@ -79,9 +78,9 @@ public class BoardDto {
 
         private int likeCount;
 
-        private boolean likeStatus;
+        private String mainImage;
 
-        private String imgUrl;
+        private boolean likeStatus;
 
         private List<ReplyDto.Response> replyList;
 
@@ -94,14 +93,17 @@ public class BoardDto {
         public Response(Board board, List<ReplyDto.Response> replies, boolean isLiked) {
             this.id = board.getId();
             this.userId = board.getUser().getId();
+            this.categoryId = board.getCategory().getId();
             this.userNickname = board.getUser().getNickname();
+            this.userProfileImage = board.getUser().getImage().getImageUrl();
+            this.categoryName = board.getCategory().getCategoryName();
             this.title = board.getTitle();
             this.content = board.getContent();
             this.view = board.getView();
             this.likeCount = board.getLikes().size();
+            this.mainImage = board.getImage().getImageUrl();
             this.likeStatus = isLiked;
             this.replyList = replies;
-            this.imgUrl = board.getImgUrl();
             this.createdAt = board.getCreatedAt();
             this.updatedAt = board.getUpdatedAt();
         }
@@ -115,17 +117,21 @@ public class BoardDto {
 
         private Long id; //게시물 Id
 
+        private String categoryName;
+        
         private String title; //글 제목
 
         private String content; //글 내용
-
+    
         private String nickname; //작성자 닉네임
+        
+        private String userImage; // 작성자 이미지
 
         private int likeCount; //좋아요 수
 
-        private String imgUrl;
-
         private int view; //조회수
+
+        private String boardImage; // 게시글 이미지
 
         private boolean isLiked; //내가 누른 좋아요 여부
 
