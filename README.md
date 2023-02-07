@@ -1,4 +1,10 @@
 # 개인프로젝트 1.13 ~ ..
+## ERD
+![image](https://user-images.githubusercontent.com/104490310/217221497-a35c6931-3cdd-4d54-95c7-d90eaa26e510.png)
+
+## 구조도 
+
+![image](https://user-images.githubusercontent.com/104490310/217223925-9dc44366-57ed-4349-be00-accf59c808f9.png)
 
 ## 목표
 - REST API 방식으로 프론트부터 서버까지 개발하기
@@ -18,5 +24,4 @@ Java, SpringBoot, SpringDataJpa, SpringSecurity, MySql, AWS(EC2, RDS)
 - 좋아요 기능
 - 게시물 리스트 필터링 (작성순, 좋아요순)
 
-## ERD
 
