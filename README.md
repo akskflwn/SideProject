@@ -7,7 +7,8 @@
 ![image](https://user-images.githubusercontent.com/104490310/217223925-9dc44366-57ed-4349-be00-accf59c808f9.png)
 
 ## 목표
-- REST API 방식으로 프론트부터 서버까지 개발하기
+- REST API 방식으로 프론트부터 서버까지 개발하기 
+- 프론트 링크 (https://github.com/akskflwn/SideProjectFront)
 - JPA 적용
 - AWS EC2를 이용해 배포까지 진행해보기
 
