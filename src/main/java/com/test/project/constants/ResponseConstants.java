@@ -54,5 +54,6 @@ public class ResponseConstants {
     public static final ResponseEntity<String> DELETED_USER =
         new ResponseEntity<>("탈퇴한 유저입니다.", HttpStatus.NOT_FOUND);
 
-
+    public static final ResponseEntity<String> CONTENT_TOO_LONG =
+        new ResponseEntity<>("제한된 글자수를 초과했습니다.", HttpStatus.BAD_REQUEST);
 }

@@ -5,6 +5,7 @@ import static com.test.project.constants.SortStatus.DEFAULT;
 import static com.test.project.constants.SortStatus.LIKES;
 
 import com.test.project.constants.SortStatus;
+import com.test.project.dto.BoardDto.UpdateRequest;
 import com.test.project.dto.LikeDto;
 import com.test.project.dto.ReplyDto.Request;
 import com.test.project.dto.ReplyDto.SuperRequest;
@@ -16,6 +17,7 @@ import com.test.project.entity.Reply;
 import com.test.project.dto.BoardDto;
 import com.test.project.dto.BoardDto.SaveRequest;
 import com.test.project.dto.ReplyDto.Response;
+import com.test.project.exception.board.DataTooLongException;
 import com.test.project.exception.board.CategoryNotFoundException;
 import com.test.project.repository.BoardRepository;
 import com.test.project.repository.CategoryRepository;
@@ -75,6 +77,9 @@ public class BoardService {
         Image image = getImage(multipartFile);
         board.setImage(image);
 
+        if(requestDTO.getContent().length() > 1000){
+            throw new DataTooLongException("제한된 글자수를 초과했습니다.");
+        }
         boardRepository.save(board);
 
         return board.getId();
@@ -86,14 +91,14 @@ public class BoardService {
         if (multipartFile == null) {
             image = imageService.getImageById(DEFAULT_BOARD_IMAGE_ID);
         } else {
-            image = imageService.savePostImage(multipartFile);
+            image = imageService.saveBoardImage(multipartFile);
         }
 
         return image;
     }
 
     @Transactional
-    public Long updateBoard(Long boardId, SaveRequest requestDto, MultipartFile multipartFile,Long userId) {
+    public Long updateBoard(Long boardId, UpdateRequest requestDto, MultipartFile multipartFile,Long userId) {
 
         Board board = getBoard(boardId);
 
@@ -102,8 +107,8 @@ public class BoardService {
             throw new UserNotMatchException("본인이 작성한글만 수정할 수 있습니다.");
         }
 
-        if (!multipartFile.isEmpty()) {
-            Image image = imageService.savePostImage(multipartFile);
+        if (multipartFile != null) {
+            Image image = imageService.saveBoardImage(multipartFile);
             board.setImage(image);
         }
 

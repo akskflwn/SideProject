@@ -2,6 +2,7 @@ package com.test.project.exception;
 
 
 import static com.test.project.constants.ResponseConstants.ALREADY_MY_PASSWORD;
+import static com.test.project.constants.ResponseConstants.CONTENT_TOO_LONG;
 import static com.test.project.constants.ResponseConstants.DELETED_USER;
 import static com.test.project.constants.ResponseConstants.DUPLICATED_EMAIL;
 import static com.test.project.constants.ResponseConstants.DUPLICATED_NICKNAME;
@@ -13,6 +14,7 @@ import static com.test.project.constants.ResponseConstants.USER_NOT_FOUND;
 import static com.test.project.constants.ResponseConstants.WRONG_EMAIL_OR_NAME;
 import static com.test.project.constants.ResponseConstants.WRONG_PASSWORD;
 
+import com.test.project.exception.board.DataTooLongException;
 import com.test.project.exception.image.FailedImageConvertException;
 import com.test.project.exception.image.FailedImageUploadException;
 import com.test.project.exception.image.ImageNotFoundException;
@@ -119,6 +121,13 @@ public class MyExceptionHandler {
         FailedImageUploadException exception) {
         log.debug("이미지 업로드에 실패했습니다.", exception);
         return FAILED_IMAGE_UPLOAD;
+    }
+
+    @ExceptionHandler(DataTooLongException.class)
+    public final ResponseEntity<String> handleDataTooLongException(
+        DataTooLongException exception) {
+        log.debug("게시글 업로드에 실패했습니다.", exception);
+        return CONTENT_TOO_LONG;
     }
 
 }

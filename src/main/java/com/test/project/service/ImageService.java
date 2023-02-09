@@ -53,7 +53,7 @@ public class ImageService {
 
 
 
-    public Image savePostImage(MultipartFile postImage) {
+    public Image saveBoardImage(MultipartFile postImage) {
         String imageUrl = awsS3Service.uploadImage(postImage);
         Image image = Image.builder()
             .imageUrl(imageUrl)

@@ -13,6 +13,7 @@ import com.test.project.exception.user.UserNotLoginedException;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.sql.Update;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -62,9 +63,9 @@ public class BoardController {
     /**
      * 게시글 수정 메서드
      */
-    @PostMapping("/update/{boardId}")
+    @PutMapping("/update/{boardId}")
     public ResponseEntity<Long> updateBoard(@PathVariable Long boardId,
-        @Valid @RequestPart SaveRequest request,
+        @Valid @RequestPart UpdateRequest request,
         @RequestPart(required = false) MultipartFile multipartFile,
         @AuthenticationPrincipal Long userId) {
         return ResponseEntity.ok(boardService.updateBoard(boardId, request, multipartFile, userId));
